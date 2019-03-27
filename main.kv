@@ -1,0 +1,23 @@
+#: import SlideTransition kivy.uix.screenmanager.SlideTransition
+
+ScreenManagement:
+    transition: SlideTransition()
+    MainScreen
+    NextScreen
+
+<MainScreen>:
+    name: "main"
+    Button: 
+        on_release: 
+            app.root.transition = SlideTransition(direction="left")
+            app.root.current = "nextScreen"
+        text: "Next Screen"
+        font_size: 50
+
+<NextScreen>:
+    name: "nextScreen"
+    Button:
+        on_release:
+            app.root.transition = SlideTransition(direction="right")
+            app.root.current = "main"
+        text: "Back"
