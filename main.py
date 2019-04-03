@@ -46,7 +46,7 @@ subject_2 = {
 
 data = {
     'subjects' : [subject_1, subject_2],
-    'user' : {
+    'student' : {
         'name' : 'Elliot',
         'class' : 'F04',
         'student_id': '1003501'
@@ -60,11 +60,12 @@ class Main(App):
         self.screenManager = ScreenManager()   
 
         loginScreen = LoginScreen(name="LOGIN_SCREEN")
+        loginScreen.onLogin = self.onLogin
         self.screenManager.loginScreen = loginScreen
         self.screenManager.add_widget(loginScreen)
 
         subjectsScreen = SubjectsScreen(name="SUBJECTS_SCREEN")
-        subjectsScreen.set_data(data)
+        
         self.screenManager.subjectsScreen = subjectsScreen
         self.screenManager.add_widget(subjectsScreen)
 
@@ -77,8 +78,12 @@ class Main(App):
     def build(self):                    
         return self.screenManager
 
-    def change(self):
-        self.button.text = "test"
-        print("test")
+    def onLogin(self):
+        self.screenManager.subjectsScreen.set_data(data)
+        self.screenManager.transition = SlideTransition(direction="left")
+        self.screenManager.current = "SUBJECTS_SCREEN"        
+        print("logged in")
+
+    
 
 Main().run()

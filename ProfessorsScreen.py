@@ -8,6 +8,9 @@ from kivy.uix.label import Label
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Rectangle
 
+from StudentDetailsWidget import StudentDetailsWidget
+from ColorBoxLayout import ColorBoxLayout
+
 itemSpacing = 12
 contentPadding = 12
 
@@ -22,7 +25,7 @@ class ProfessorsScreen(Screen):
             'professors' : []            
         }
         
-        boxLayout = BoxLayout(orientation='vertical')
+        boxLayout = ColorBoxLayout(orientation='vertical', color=Color(162/255, 162/255, 165/255,1))
         
         #scroll view
         self.scrollView = ScrollView()
@@ -52,10 +55,16 @@ class ProfessorsScreen(Screen):
         boxLayout.add_widget(self.scrollView)
         self.add_widget(boxLayout)     
 
+        self.studentDetailsWidget = StudentDetailsWidget(size_hint_y=None, height=200)
+        self.add_widget(self.studentDetailsWidget) 
+
     def set_subject_data(self, subject):
         self.subjectData = subject
         self.subjectLabel.text = subject['name']
         self.update()
+
+    def set_student_data(self, student_data):
+        self.studentDetailsWidget.set_student_data(student_data)        
 
     def on_pre_enter(self, *args):                
         self.update()

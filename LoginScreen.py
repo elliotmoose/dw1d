@@ -10,6 +10,9 @@ class LoginScreen(Screen):
         self.add_widget(taptologin)
 
     def nextScreen(self):
-        self.parent.transition = SlideTransition(direction="left")
-        self.parent.current = "SUBJECTS_SCREEN"
+        self.onLogin()
+        # try:
+            
+        # except:
+        #     print('No callback defined')            
 
