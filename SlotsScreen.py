@@ -15,7 +15,7 @@ itemSpacing = 12
 contentPadding = 12
 
 from functools import partial
-class ProfessorsScreen(Screen):    
+class SlotsScreen(Screen):    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
     
@@ -42,7 +42,7 @@ class ProfessorsScreen(Screen):
         self.subjectLabel = Label(text='No subject selected', color=(0,0,0,1), size_hint_y=None, height=40, halign="left", pos_hint={'x': 0}, pos=(20, 100))
         self.subjectLabel.bind(size=self.subjectLabel.setter('text_size'))
 
-        self.headerLabel = Label(text='Professors', size_hint_x=None, width=380, font_size=70)
+        self.headerLabel = Label(text='Consultation Slots', size_hint_x=None, width=800, font_size=70)
         self.headerLabel.bind(size=self.headerLabel.setter('text_size'))
         navBarTitles.add_widget(self.headerLabel)
         navBarTitles.add_widget(self.subjectLabel)
@@ -74,23 +74,24 @@ class ProfessorsScreen(Screen):
         buttonHeight = 200
         for i in range(len(self.subjectData['professors'])):
             
-            profButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
-            profButton.size_hint_y = None 
-            profButton.height = buttonHeight
-            profButton.text = self.subjectData['professors'][i]['name']
-            profButton.on_press=partial(self.select_prof, i)            
-            self.contentView.add_widget(profButton)
+            slotButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
+            slotButton.size_hint_y = None 
+            slotButton.height = buttonHeight
+            slotButton.text = self.subjectData['professors'][i]['name']
+            slotButton.on_press=partial(self.select_slot, i)            
+            self.contentView.add_widget(slotButton)
 
         self.contentView.size_hint_y = None
         self.contentView.height = len(self.subjectData['professors'])*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
         
     def back(self):
         self.parent.transition = SlideTransition(direction="right")
-        self.parent.current = 'SUBJECTS_SCREEN'
+        self.parent.current = 'PROFESSORS_SCREEN'
 
-    def select_prof(self, index):
-        self.parent.transition = SlideTransition(direction="left")
-        self.parent.current = 'SLOTS_SCREEN'
+    def select_slot(self, index):
+        pass
+        # self.parent.transition = SlideTransition(direction="left")
+        # self.parent.current = 'PROFESSORS_SCREEN'
 
 
 class CustomBoxLayout(BoxLayout):  
