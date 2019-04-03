@@ -21,7 +21,14 @@ slot_1 = {
 }
 
 prof_1 = {
-    'name' : 'Oka',
+    'name' : 'Mei Xuan',
+    'slots' : [
+        slot_1
+    ]
+}
+
+prof_2 = {
+    'name' : 'Chun Kiat',
     'slots' : [
         slot_1
     ]
@@ -32,8 +39,13 @@ subject_1 = {
     'professors' : [prof_1]
 }
 
+subject_2 = {
+    'name' : "10.007 Modelling the Systems World",
+    'professors' : [prof_2]
+}
+
 data = {
-    'subjects' : [subject_1, subject_1,subject_1],
+    'subjects' : [subject_1, subject_2],
     'user' : {
         'name' : 'Elliot',
         'class' : 'F04',
