@@ -14,7 +14,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition, Slide
 from LoginScreen import LoginScreen
 from SubjectsScreen import SubjectsScreen
 from ProfessorsScreen import ProfessorsScreen
-from SlotsScreen import SlotsScreen
 
 slot_1 = {
     'time' : '0800',
@@ -41,7 +40,7 @@ prof_2 = {
 
 subject_1 = {
     'name' : "10.008 Engineering in the Physical World",
-    'professors' : [prof_1]
+    'professors' : [prof_1,prof_2]
 }
 
 subject_2 = {
@@ -78,11 +77,6 @@ class Main(App):
     
         self.screenManager.professorsScreen = professorsScreen
         self.screenManager.add_widget(professorsScreen)
-
-        slotsScreen = SlotsScreen(name="SLOTS_SCREEN")        
-    
-        self.screenManager.slotsScreen = slotsScreen
-        self.screenManager.add_widget(slotsScreen)
                 
     def build(self):                    
         return self.screenManager

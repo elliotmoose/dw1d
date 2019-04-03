@@ -14,6 +14,9 @@ from ColorBoxLayout import ColorBoxLayout
 itemSpacing = 12
 contentPadding = 12
 
+profButtonColor = (1,1,1,1)
+profButtonTextColor = (0.1,0.1,0.1,1)
+
 from functools import partial
 class ProfessorsScreen(Screen):    
     def __init__(self, *args, **kwargs):
@@ -54,6 +57,7 @@ class ProfessorsScreen(Screen):
         self.scrollView = ScrollView()
         self.contentView = BoxLayout(orientation='vertical', padding=contentPadding, spacing=itemSpacing, pos_hint={'top': 1})
         self.scrollView.add_widget(self.contentView)
+        self.profButtons = []
 
         #slots
         self.slotsView = SlotsWidget(orientation='vertical', color=Color(228/255,228/255,228/255,1))        
@@ -86,19 +90,20 @@ class ProfessorsScreen(Screen):
         self.update()
 
     def on_leave(self, *args):
-        self.profDetailsView.reset_prof_data()
-        print('leaving')
+        self.profDetailsView.reset_prof_data()        
 
     def update(self):
-        self.contentView.clear_widgets()        
-        buttonHeight = 200
+        self.contentView.clear_widgets()  
+        self.profButtons = []      
+        buttonHeight = 200        
         for i in range(len(self.get_profs())):            
-            profButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
+            profButton = Button(background_normal='', color=profButtonTextColor, font_size=50)            
             profButton.size_hint_y = None 
             profButton.height = buttonHeight
             profButton.text = self.get_prof_at_index(i)['name']
             profButton.on_press=partial(self.select_prof, i)            
             self.contentView.add_widget(profButton)
+            self.profButtons.append(profButton)
 
         self.contentView.size_hint_y = None
         self.contentView.height = len(self.subjectData['professors'])*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
@@ -113,7 +118,16 @@ class ProfessorsScreen(Screen):
         # self.parent.slotsScreen.set_student_data(self.student_data)
         # self.parent.slotsScreen.set_subject_data(self.subjectData)
         # self.parent.slotsScreen.set_prof_data(self.get_prof(index))        
+        self.reset_button_colors()
+        self.profButtons[index].background_color = (142/255, 229/255, 179/255,1)
+        self.profButtons[index].color = profButtonColor
         self.profDetailsView.set_prof_data(self.get_prof_at_index(index))
+    
+    def reset_button_colors(self):
+        for button in self.profButtons:
+            button.background_color = profButtonColor
+            button.color = profButtonTextColor
+            button.background_normal=''
 
     def get_profs(self):
         return self.subjectData['professors']
