@@ -1,3 +1,4 @@
+
 from kivy.uix.screenmanager import Screen
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -35,7 +36,7 @@ class SubjectsScreen(Screen):
         self.backButton = Button(size_hint=(None,1), width= 260, text='< Back', background_color=(0, 0, 0, 0))
         self.backButton.on_press = self.back
                 
-        self.navigationBar.add_widget(Label(text='Subjects', size_hint_x=None, width=380, font_size=70))
+        self.navigationBar.add_widget(Label(text='Professors', size_hint_x=None, width=380, font_size=70))
         self.navigationBar.add_widget(Widget())
         self.navigationBar.add_widget(self.backButton)
 
@@ -49,19 +50,19 @@ class SubjectsScreen(Screen):
     def update(self):
         self.contentView.clear_widgets()        
         buttonHeight = 200
-        for i in range(len(self.subjects)):
-            subjectButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
-            subjectButton.size_hint_y = None 
-            subjectButton.height = buttonHeight
-            subjectButton.text = self.subjects[i]
-            self.contentView.add_widget(subjectButton)
+        for i in range(len(self.professors)):
+            professorButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
+            professorButton.size_hint_y = None 
+            professorButton.height = buttonHeight
+            professorButton.text = self.professors[i]
+            self.contentView.add_widget(professorButton)
 
         self.contentView.size_hint_y = None
         self.contentView.height = len(self.subjects)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
         
     def back(self):
         self.parent.transition = SlideTransition(direction="right")
-        self.parent.current = 'LOGIN_SCREEN'
+        self.parent.current = 'SUBJECTS_SCREEN'
 
 class CustomBoxLayout(BoxLayout):  
     def __init__(self, **kwargs):  

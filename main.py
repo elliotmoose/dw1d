@@ -13,6 +13,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition, Slide
 
 from LoginScreen import LoginScreen
 from SubjectsScreen import SubjectsScreen
+# from ProfessorsScreen import ProfessorsScreen
 
 subjects = ["10.008 Engineering in the Physical World", "3.007 Introduction to Design","3","4","5","6","7","8"]        
 
