@@ -1,55 +1,55 @@
-#: import main main
-#: import SlideTransition kivy.uix.screenmanager.SlideTransition
-#: import ListAdapter kivy.adapters.listadapter.ListAdapter
-#: import ListItemButton kivy.uix.listview.ListItemButton
-#: import ScrollView kivy.uix.scrollview.ScrollView
+# #: import main main
+# #: import SlideTransition kivy.uix.screenmanager.SlideTransition
+# #: import ListAdapter kivy.adapters.listadapter.ListAdapter
+# #: import ListItemButton kivy.uix.listview.ListItemButton
+# #: import ScrollView kivy.uix.scrollview.ScrollView
 
-ScreenManagement:
-    id: screenmanager
-    transition: SlideTransition()    
-    NextScreen
+# ScreenManagement:
+#     id: screenmanager
+#     transition: SlideTransition()    
+#     NextScreen
     
-<SubjectListButton>:    
-    on_press:
-        app.root.transition = SlideTransition(direction="left")
-        app.root.current = "nextScreen"
+# <SubjectListButton>:    
+#     on_press:
+#         app.root.transition = SlideTransition(direction="left")
+#         app.root.current = "nextScreen"
  
-<SubjectListView>:
-    subjectListScrollView : scrollview
-    contentView : scrollviewcontent
-    refreshButton : refreshButton
-    Button:
-        id:refreshButton
-        text: "Refresh"
-        size_hint : (None,None)
-        height: 80
-        width: 300
-        on_press: root.update()
-    ScrollView:
-        id: scrollview
-        pos_hint: {'top': 1}       
-        BoxLayout:
-            id: scrollviewcontent
-            orientation: 'vertical'
-            canvas.before:
-                Color:
-                    rgba: (0.05, 0.45, 0.45, 1)
-                Rectangle:
-                    pos: self.pos
-                    size: self.size  
+# <SubjectListView>:
+#     subjectListScrollView : scrollview
+#     contentView : scrollviewcontent
+#     refreshButton : refreshButton
+#     Button:
+#         id:refreshButton
+#         text: "Refresh"
+#         size_hint : (None,None)
+#         height: 80
+#         width: 300
+#         on_press: root.update()
+#     ScrollView:
+#         id: scrollview
+#         pos_hint: {'top': 1}       
+#         BoxLayout:
+#             id: scrollviewcontent
+#             orientation: 'vertical'
+#             canvas.before:
+#                 Color:
+#                     rgba: (0.05, 0.45, 0.45, 1)
+#                 Rectangle:
+#                     pos: self.pos
+#                     size: self.size  
 
 
-<SubjectsScreen>:
-    name: "main"    
-    SubjectListView: 
+# <SubjectsScreen>:
+#     name: "main"    
+#     SubjectListView: 
 
 
          
 
-<NextScreen>:
-    name: "nextScreen"
-    Button:
-        on_release:
-            app.root.transition = SlideTransition(direction="right")
-            app.root.current = "main"
-        text: "Back"
+# <NextScreen>:
+#     name: "nextScreen"
+#     Button:
+#         on_release:
+#             app.root.transition = SlideTransition(direction="right")
+#             app.root.current = "main"
+#         text: "Back"

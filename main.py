@@ -10,21 +10,11 @@ from kivy.uix.widget import Widget
 from kivy.uix.button import Label, Button
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition, SlideTransition
 
+
 from LoginScreen import LoginScreen
 from SubjectsScreen import SubjectsScreen
 
-subjects = ["10.008 Engineering in the Physical World", "3.007 Introduction to Design","3","4","5","6","7","8"]
-
-class NextScreen(Screen):
-    pass
-
-class ScreenManagement(ScreenManager):
-    pass
-
-class SubjectListButton(Button):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)        
-        
+subjects = ["10.008 Engineering in the Physical World", "3.007 Introduction to Design","3","4","5","6","7","8"]        
 
 class Main(App):        
 
@@ -43,6 +33,4 @@ class Main(App):
         self.button.text = "test"
         print("test")
 
-
-window = Main()
-window.run()
+Main().run()

@@ -4,7 +4,12 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 from kivy.uix.screenmanager import SlideTransition
+from kivy.uix.label import Label
+from kivy.graphics.instructions import InstructionGroup
+from kivy.graphics import Color, Rectangle
 
+itemSpacing = 12
+contentPadding = 12
 
 class SubjectsScreen(Screen):    
     def __init__(self, *args, **kwargs):
@@ -16,19 +21,21 @@ class SubjectsScreen(Screen):
         
         #scroll view
         self.scrollView = ScrollView()
-        self.contentView = BoxLayout(orientation='vertical')
+        self.contentView = BoxLayout(orientation='vertical', padding=contentPadding, spacing=itemSpacing, pos_hint={'top': 1})
         self.scrollView.add_widget(self.contentView)
 
         #navigation bar
-        self.navigationBar = BoxLayout(orientation='horizontal', size_hint_y=None, height=80)
+        self.navigationBar = CustomBoxLayout(orientation='horizontal', size_hint_y=None, height=140)
+        self.navigationBar.background_color= (0,0,0,1)     
+        headerBG = InstructionGroup()   
+        headerBG.add(Color(0, 0, 1, 0.2))
+        headerBG.add(Rectangle(pos=boxLayout.pos, size=boxLayout.size))
+        self.navigationBar.canvas.add(headerBG)
         
-        self.refreshButton = Button(size_hint=(None,1), width= 300, text='Refresh')
-        self.refreshButton.on_press = self.update
-        
-        self.backButton = Button(size_hint=(None,1), width= 300, text='Back')
+        self.backButton = Button(size_hint=(None,1), width= 260, text='< Back', background_color=(0, 0, 0, 0))
         self.backButton.on_press = self.back
-        
-        self.navigationBar.add_widget(self.refreshButton)
+                
+        self.navigationBar.add_widget(Label(text='Subjects', size_hint_x=None, width=380, font_size=70))
         self.navigationBar.add_widget(Widget())
         self.navigationBar.add_widget(self.backButton)
 
@@ -43,14 +50,14 @@ class SubjectsScreen(Screen):
         self.contentView.clear_widgets()        
         buttonHeight = 200
         for i in range(len(self.subjects)):
-            subjectButton = Button()
+            subjectButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
             subjectButton.size_hint_y = None 
             subjectButton.height = buttonHeight
             subjectButton.text = self.subjects[i]
             self.contentView.add_widget(subjectButton)
 
         self.contentView.size_hint_y = None
-        self.contentView.height = len(self.subjects)*buttonHeight
+        self.contentView.height = len(self.subjects)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
         
     def back(self):
         self.parent.transition = SlideTransition(direction="right")
@@ -78,3 +85,18 @@ class SubjectsScreen(Screen):
 #         self.contentView.height = len(subjects)*buttonHeight
 #         # self.add_widget(Widget())    
             
+
+class CustomBoxLayout(BoxLayout):  
+    def __init__(self, **kwargs):  
+        self.bg = InstructionGroup()   
+        self.color_widget = Color(142/255, 206/255, 229/255, 1)  # red  
+        self._rectangle = Rectangle()
+        self.bg.add(self.color_widget)
+        self.bg.add(self._rectangle)
+        super(CustomBoxLayout, self).__init__(**kwargs)  
+        self.canvas.add(self.bg)
+
+    def on_size(self, *args):  
+        if self._rectangle != None:
+            self._rectangle.size = self.size  
+            self._rectangle.pos = self.pos              
