@@ -1,4 +1,3 @@
-
 from kivy.uix.screenmanager import Screen
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -12,11 +11,16 @@ from kivy.graphics import Color, Rectangle
 itemSpacing = 12
 contentPadding = 12
 
+from functools import partial
 class ProfessorsScreen(Screen):    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # self.subjects = kwargs['subjects']
-        self.subjects = []
+    
+        #this data should be a subject
+        self.subjectData = {
+            'name': 'No subject selected',
+            'professors' : []            
+        }
         
         boxLayout = BoxLayout(orientation='vertical')
         
@@ -26,17 +30,14 @@ class ProfessorsScreen(Screen):
         self.scrollView.add_widget(self.contentView)
 
         #navigation bar
-        self.navigationBar = CustomBoxLayout(orientation='horizontal', size_hint_y=None, height=140)
-        self.navigationBar.background_color= (0,0,0,1)     
-        headerBG = InstructionGroup()   
-        headerBG.add(Color(0, 0, 1, 0.2))
-        headerBG.add(Rectangle(pos=boxLayout.pos, size=boxLayout.size))
-        self.navigationBar.canvas.add(headerBG)
+        self.navigationBar = CustomBoxLayout(orientation='horizontal', size_hint_y=None, height=140)        
         
         self.backButton = Button(size_hint=(None,1), width= 260, text='< Back', background_color=(0, 0, 0, 0))
         self.backButton.on_press = self.back
                 
         self.navigationBar.add_widget(Label(text='Professors', size_hint_x=None, width=380, font_size=70))
+        self.subjectLabel = Label(text='No subject selected')
+        self.navigationBar.add_widget(self.subjectLabel)
         self.navigationBar.add_widget(Widget())
         self.navigationBar.add_widget(self.backButton)
 
@@ -44,25 +45,37 @@ class ProfessorsScreen(Screen):
         boxLayout.add_widget(self.scrollView)
         self.add_widget(boxLayout)     
 
+    def set_subject_data(self, subject):
+        self.subjectData = subject
+        self.subjectLabel.text = subject['name']
+        self.update()
+
     def on_pre_enter(self, *args):                
         self.update()
 
     def update(self):
         self.contentView.clear_widgets()        
         buttonHeight = 200
-        for i in range(len(self.professors)):
-            professorButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
-            professorButton.size_hint_y = None 
-            professorButton.height = buttonHeight
-            professorButton.text = self.professors[i]
-            self.contentView.add_widget(professorButton)
+        for i in range(len(self.subjectData['professors'])):
+            
+            subjectButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
+            subjectButton.size_hint_y = None 
+            subjectButton.height = buttonHeight
+            subjectButton.text = self.subjectData['professors'][i]['name']
+            subjectButton.on_press=partial(self.select_subject, i)            
+            self.contentView.add_widget(subjectButton)
 
         self.contentView.size_hint_y = None
-        self.contentView.height = len(self.subjects)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
+        self.contentView.height = len(self.subjectData['professors'])*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
         
     def back(self):
         self.parent.transition = SlideTransition(direction="right")
         self.parent.current = 'SUBJECTS_SCREEN'
+
+    def select_subject(self, index):
+        self.parent.transition = SlideTransition(direction="left")
+        self.parent.current = 'PROFESSORS_SCREEN'
+
 
 class CustomBoxLayout(BoxLayout):  
     def __init__(self, **kwargs):  

@@ -11,6 +11,7 @@ from kivy.graphics import Color, Rectangle
 itemSpacing = 12
 contentPadding = 12
 
+from functools import partial
 class SubjectsScreen(Screen):    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -49,10 +50,12 @@ class SubjectsScreen(Screen):
         self.contentView.clear_widgets()        
         buttonHeight = 200
         for i in range(len(self.data['subjects'])):
+            
             subjectButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
             subjectButton.size_hint_y = None 
             subjectButton.height = buttonHeight
             subjectButton.text = self.data['subjects'][i]['name']
+            subjectButton.on_press=partial(self.select_subject, i)            
             self.contentView.add_widget(subjectButton)
 
         self.contentView.size_hint_y = None
@@ -61,6 +64,12 @@ class SubjectsScreen(Screen):
     def back(self):
         self.parent.transition = SlideTransition(direction="right")
         self.parent.current = 'LOGIN_SCREEN'
+
+    def select_subject(self, index):
+        self.parent.transition = SlideTransition(direction="left")
+        self.parent.current = 'PROFESSORS_SCREEN'
+        self.parent.professorsScreen.set_subject_data(self.data['subjects'][index])
+
 
 class CustomBoxLayout(BoxLayout):  
     def __init__(self, **kwargs):  

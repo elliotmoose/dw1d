@@ -46,10 +46,21 @@ class Main(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)        
         self.screenManager = ScreenManager()   
-        self.screenManager.add_widget(LoginScreen(name="LOGIN_SCREEN"))
-        subjectsScreen = SubjectsScreen( name="SUBJECTS_SCREEN")
+
+        loginScreen = LoginScreen(name="LOGIN_SCREEN")
+        self.screenManager.loginScreen = loginScreen
+        self.screenManager.add_widget(loginScreen)
+
+        subjectsScreen = SubjectsScreen(name="SUBJECTS_SCREEN")
         subjectsScreen.set_data(data)
-        self.screenManager.add_widget(subjectsScreen)        
+        self.screenManager.subjectsScreen = subjectsScreen
+        self.screenManager.add_widget(subjectsScreen)
+
+        professorsScreen = ProfessorsScreen(name="PROFESSORS_SCREEN")        
+    
+        self.screenManager.professorsScreen = professorsScreen
+        self.screenManager.add_widget(professorsScreen)
+        
 
     def build(self):                    
         return self.screenManager
