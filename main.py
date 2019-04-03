@@ -23,6 +23,8 @@ slot_1 = {
 
 prof_1 = {
     'name' : 'Mei Xuan',
+    'contact': '91110000',
+    'email': 'meixuan@sutd.edu.sg',
     'slots' : [
         slot_1
     ]
@@ -30,6 +32,8 @@ prof_1 = {
 
 prof_2 = {
     'name' : 'Chun Kiat',
+    'contact': '91119999',
+    'email': 'chunkiat@sutd.edu.sg',
     'slots' : [
         slot_1
     ]

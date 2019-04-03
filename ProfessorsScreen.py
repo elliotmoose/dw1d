@@ -27,13 +27,10 @@ class ProfessorsScreen(Screen):
         
         boxLayout = ColorBoxLayout(orientation='vertical', color=Color(162/255, 162/255, 165/255,1))
         
-        #scroll view
-        self.scrollView = ScrollView()
-        self.contentView = BoxLayout(orientation='vertical', padding=contentPadding, spacing=itemSpacing, pos_hint={'top': 1})
-        self.scrollView.add_widget(self.contentView)
+        bodyContainer = BoxLayout(orientation='horizontal')                
 
-        #navigation bar
-        self.navigationBar = CustomBoxLayout(orientation='horizontal', size_hint_y=None, height=140)        
+        #navigation bar ==
+        self.navigationBar = ColorBoxLayout(orientation='horizontal', size_hint_y=None, height=140)        
         
         self.backButton = Button(size_hint=(None,1), width= 260, text='< Back', background_color=(0, 0, 0, 0))
         self.backButton.on_press = self.back
@@ -50,11 +47,29 @@ class ProfessorsScreen(Screen):
         self.navigationBar.add_widget(navBarTitles)
         self.navigationBar.add_widget(Widget())
         self.navigationBar.add_widget(self.backButton)
+        #end == 
+
+
+        #profs
+        self.scrollView = ScrollView()
+        self.contentView = BoxLayout(orientation='vertical', padding=contentPadding, spacing=itemSpacing, pos_hint={'top': 1})
+        self.scrollView.add_widget(self.contentView)
+
+        #slots
+        self.slotsView = SlotsWidget(orientation='vertical', color=Color(228/255,228/255,228/255,1))        
+
+        #prof detail        
+        self.profDetailsView = ProfDetailsWidget(orientation='vertical', color=Color(248/255,248/255,248/255,1))
+
+        bodyContainer.add_widget(self.scrollView) 
+        bodyContainer.add_widget(self.slotsView)
+        bodyContainer.add_widget(self.profDetailsView)
 
         boxLayout.add_widget(self.navigationBar)
-        boxLayout.add_widget(self.scrollView)
-        self.add_widget(boxLayout)     
+        boxLayout.add_widget(bodyContainer)       
 
+        self.add_widget(boxLayout)     
+        
         self.studentDetailsWidget = StudentDetailsWidget(size_hint_y=None, height=200)
         self.add_widget(self.studentDetailsWidget) 
 
@@ -64,20 +79,24 @@ class ProfessorsScreen(Screen):
         self.update()
 
     def set_student_data(self, student_data):
+        self.student_data = student_data
         self.studentDetailsWidget.set_student_data(student_data)        
 
     def on_pre_enter(self, *args):                
         self.update()
 
+    def on_leave(self, *args):
+        self.profDetailsView.reset_prof_data()
+        print('leaving')
+
     def update(self):
         self.contentView.clear_widgets()        
         buttonHeight = 200
-        for i in range(len(self.subjectData['professors'])):
-            
+        for i in range(len(self.get_profs())):            
             profButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
             profButton.size_hint_y = None 
             profButton.height = buttonHeight
-            profButton.text = self.subjectData['professors'][i]['name']
+            profButton.text = self.get_prof_at_index(i)['name']
             profButton.on_press=partial(self.select_prof, i)            
             self.contentView.add_widget(profButton)
 
@@ -89,21 +108,73 @@ class ProfessorsScreen(Screen):
         self.parent.current = 'SUBJECTS_SCREEN'
 
     def select_prof(self, index):
-        self.parent.transition = SlideTransition(direction="left")
-        self.parent.current = 'SLOTS_SCREEN'
+        # self.parent.transition = SlideTransition(direction="left")
+        # self.parent.current = 'SLOTS_SCREEN'
+        # self.parent.slotsScreen.set_student_data(self.student_data)
+        # self.parent.slotsScreen.set_subject_data(self.subjectData)
+        # self.parent.slotsScreen.set_prof_data(self.get_prof(index))        
+        self.profDetailsView.set_prof_data(self.get_prof_at_index(index))
+
+    def get_profs(self):
+        return self.subjectData['professors']
+
+    def get_prof_at_index(self, index):
+        return self.subjectData['professors'][index]
 
 
-class CustomBoxLayout(BoxLayout):  
-    def __init__(self, **kwargs):  
-        self.bg = InstructionGroup()   
-        self.color_widget = Color(142/255, 206/255, 229/255, 1)  # red  
-        self._rectangle = Rectangle()
-        self.bg.add(self.color_widget)
-        self.bg.add(self._rectangle)
-        super(CustomBoxLayout, self).__init__(**kwargs)  
-        self.canvas.add(self.bg)
+class SlotsWidget(ColorBoxLayout):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-    def on_size(self, *args):  
-        if self._rectangle != None:
-            self._rectangle.size = self.size  
-            self._rectangle.pos = self.pos              
+
+class ProfDetailsWidget(ColorBoxLayout):   
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)        
+
+        self.padding = [24,18,0,0]
+
+        self.headerLabel = ProfDetailLabel(text='Professor Details:')
+        self.add_widget(self.headerLabel)
+
+        self.profNameLabel = ProfDetailLabel(text='Name: ')
+        self.add_widget(self.profNameLabel)
+        
+        self.profEmailLabel = ProfDetailLabel(text='Email: ')
+        self.add_widget(self.profEmailLabel)
+        
+        self.profContactLabel = ProfDetailLabel(text='Contact: ')
+        self.add_widget(self.profContactLabel)        
+
+        self.add_widget(Widget())
+
+        self.reset_prof_data()
+
+    def set_prof_data(self, prof_data):
+        self.prof_data = prof_data
+        self.update()        
+
+    def reset_prof_data(self):
+        self.prof_data = None
+
+        self.update()
+
+    def update(self):
+        if self.prof_data == None:
+            self.profNameLabel.text = 'No Selection'
+            self.profEmailLabel.text = ''
+            self.profContactLabel.text = ''
+        else:    
+            self.profNameLabel.text = 'Name: ' + self.prof_data['name']
+            self.profEmailLabel.text = 'Email: ' + self.prof_data['email']
+            self.profContactLabel.text = 'Contact: ' + self.prof_data['contact']
+        
+
+
+class ProfDetailLabel(Label):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        
+        self.bind(size=self.setter('text_size'))
+        self.color = (0,0,0,1)
+        self.size_hint_y = None
+        self.height = 40
