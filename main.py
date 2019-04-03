@@ -13,9 +13,33 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition, Slide
 
 from LoginScreen import LoginScreen
 from SubjectsScreen import SubjectsScreen
-# from ProfessorsScreen import ProfessorsScreen
+from ProfessorsScreen import ProfessorsScreen
 
-subjects = ["10.008 Engineering in the Physical World", "3.007 Introduction to Design","3","4","5","6","7","8"]        
+slot_1 = {
+    'time' : '0800',
+    'date' : '24/08/19'    
+}
+
+prof_1 = {
+    'name' : 'Oka',
+    'slots' : [
+        slot_1
+    ]
+}
+
+subject_1 = {
+    'name' : "10.008 Engineering in the Physical World",
+    'professors' : [prof_1]
+}
+
+data = {
+    'subjects' : [subject_1, subject_1,subject_1],
+    'user' : {
+        'name' : 'Elliot',
+        'class' : 'F04',
+        'student_id': '1003501'
+    }
+}        
 
 class Main(App):        
 
@@ -24,7 +48,7 @@ class Main(App):
         self.screenManager = ScreenManager()   
         self.screenManager.add_widget(LoginScreen(name="LOGIN_SCREEN"))
         subjectsScreen = SubjectsScreen( name="SUBJECTS_SCREEN")
-        subjectsScreen.subjects = subjects
+        subjectsScreen.set_data(data)
         self.screenManager.add_widget(subjectsScreen)        
 
     def build(self):                    

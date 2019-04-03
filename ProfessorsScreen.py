@@ -12,7 +12,7 @@ from kivy.graphics import Color, Rectangle
 itemSpacing = 12
 contentPadding = 12
 
-class SubjectsScreen(Screen):    
+class ProfessorsScreen(Screen):    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # self.subjects = kwargs['subjects']

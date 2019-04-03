@@ -15,7 +15,7 @@ class SubjectsScreen(Screen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # self.subjects = kwargs['subjects']
-        self.subjects = []
+        self.data = []
         
         boxLayout = BoxLayout(orientation='vertical')
         
@@ -25,12 +25,7 @@ class SubjectsScreen(Screen):
         self.scrollView.add_widget(self.contentView)
 
         #navigation bar
-        self.navigationBar = CustomBoxLayout(orientation='horizontal', size_hint_y=None, height=140)
-        self.navigationBar.background_color= (0,0,0,1)     
-        headerBG = InstructionGroup()   
-        headerBG.add(Color(0, 0, 1, 0.2))
-        headerBG.add(Rectangle(pos=boxLayout.pos, size=boxLayout.size))
-        self.navigationBar.canvas.add(headerBG)
+        self.navigationBar = CustomBoxLayout(orientation='horizontal', size_hint_y=None, height=140)        
         
         self.backButton = Button(size_hint=(None,1), width= 260, text='< Back', background_color=(0, 0, 0, 0))
         self.backButton.on_press = self.back
@@ -43,21 +38,25 @@ class SubjectsScreen(Screen):
         boxLayout.add_widget(self.scrollView)
         self.add_widget(boxLayout)     
 
+    def set_data(self, data):
+        self.data = data
+        self.update()
+
     def on_pre_enter(self, *args):                
         self.update()
 
     def update(self):
         self.contentView.clear_widgets()        
         buttonHeight = 200
-        for i in range(len(self.subjects)):
+        for i in range(len(self.data['subjects'])):
             subjectButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
             subjectButton.size_hint_y = None 
             subjectButton.height = buttonHeight
-            subjectButton.text = self.subjects[i]
+            subjectButton.text = self.data['subjects'][i]['name']
             self.contentView.add_widget(subjectButton)
 
         self.contentView.size_hint_y = None
-        self.contentView.height = len(self.subjects)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
+        self.contentView.height = len(self.data['subjects'])*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
         
     def back(self):
         self.parent.transition = SlideTransition(direction="right")
