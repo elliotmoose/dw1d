@@ -118,10 +118,14 @@ class ProfessorsScreen(Screen):
         # self.parent.slotsScreen.set_student_data(self.student_data)
         # self.parent.slotsScreen.set_subject_data(self.subjectData)
         # self.parent.slotsScreen.set_prof_data(self.get_prof(index))        
-        self.reset_button_colors()
+        self.reset_button_colors()    
         self.profButtons[index].background_color = (142/255, 229/255, 179/255,1)
         self.profButtons[index].color = profButtonColor
+
+        self.slotsView.set_slots(self.get_prof_at_index(index)['slots'])
+
         self.profDetailsView.set_prof_data(self.get_prof_at_index(index))
+
     
     def reset_button_colors(self):
         for button in self.profButtons:
@@ -139,6 +143,35 @@ class ProfessorsScreen(Screen):
 class SlotsWidget(ColorBoxLayout):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        self.scrollView = ScrollView()
+        self.contentView = BoxLayout(orientation='vertical', padding=contentPadding, spacing=itemSpacing, pos_hint={'top': 1})    
+        self.scrollView.add_widget(self.contentView)
+        self.add_widget(self.scrollView)
+
+
+    def set_slots(self, slots):
+        self.slotsData = slots
+
+        print(slots)
+        self.contentView.clear_widgets()
+        buttonHeight = 120                           
+        for i in range(len(slots)):
+            slotButton = Button(background_normal='',color=profButtonTextColor, font_size=40)            
+            slotButton.size_hint_y = None 
+            slotButton.height = buttonHeight
+            slotButton.text = self.get_slot_at_index(i)['time']
+            slotButton.on_press=partial(self.select_slot, i)            
+            self.contentView.add_widget(slotButton)
+
+        self.contentView.size_hint_y = None
+        self.contentView.height = len(slots)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
+
+    def get_slot_at_index(self, index):
+        return self.slotsData[index]
+
+    def select_slot(self, index):
+        pass
 
 
 class ProfDetailsWidget(ColorBoxLayout):   

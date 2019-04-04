@@ -20,12 +20,18 @@ slot_1 = {
     'date' : '24/08/19'    
 }
 
+slot_2 = {
+    'time' : '1000',
+    'date' : '24/08/19'    
+}
+
 prof_1 = {
     'name' : 'Mei Xuan',
     'contact': '91110000',
     'email': 'meixuan@sutd.edu.sg',
     'slots' : [
-        slot_1
+        slot_1,
+        slot_2
     ]
 }
 
@@ -81,8 +87,11 @@ class Main(App):
     def build(self):                    
         return self.screenManager
 
+    #LOGIN IS DONE HERE================================================================================================================================================
     def onLogin(self):
+        #SET LOGIN DATA HERE ============================================================
         self.screenManager.subjectsScreen.set_data(data)
+
         self.screenManager.transition = SlideTransition(direction="left")
         self.screenManager.current = "SUBJECTS_SCREEN"        
         print("logged in")
