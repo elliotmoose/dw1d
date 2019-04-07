@@ -36,13 +36,16 @@ class StudentDetailsWidget(Widget):
 
         container = BoxLayout(orientation='vertical', size_hint=(None, None), width=400, height=200, padding=[24, 0,0, 16])        
 
-        self.nameLabel = StudentDetailLabel(text='NO NAME')                        
         self.idLabel = StudentDetailLabel(text='NO ID')        
+        self.nameLabel = StudentDetailLabel(text='NO NAME')                        
         self.classLabel = StudentDetailLabel(text='NO ID')        
+        self.creditsLabel = StudentDetailLabel(text='NO ID')        
 
-        container.add_widget(self.nameLabel)
         container.add_widget(self.idLabel)
+        container.add_widget(self.nameLabel)
         container.add_widget(self.classLabel)
+        container.add_widget(self.creditsLabel)
+        
                 
         self.add_widget(container)
         self.add_widget(Widget())
@@ -56,6 +59,7 @@ class StudentDetailsWidget(Widget):
         self.nameLabel.text = 'Name: ' + data['name']                
         self.idLabel.text = 'ID: ' + data['student_id']                
         self.classLabel.text = 'Class: ' + data['class']                
+        self.creditsLabel.text = 'Credits: {0}'.format(data['credits'])
         
 
     def on_size(self, *args):  

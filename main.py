@@ -10,67 +10,21 @@ from kivy.uix.widget import Widget
 from kivy.uix.button import Label, Button
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition, SlideTransition
 
-
 from LoginScreen import LoginScreen
 from SubjectsScreen import SubjectsScreen
 from ProfessorsScreen import ProfessorsScreen
+from DBManager import DBManager
 
-slot_1 = {
-    'time' : '0800',
-    'date' : '24/08/19'    
-}
-
-slot_2 = {
-    'time' : '1000',
-    'date' : '24/08/19'    
-}
-
-prof_1 = {
-    'name' : 'Mei Xuan',
-    'contact': '91110000',
-    'email': 'meixuan@sutd.edu.sg',
-    'slots' : [
-        slot_1,
-        slot_2
-    ]
-}
-
-prof_2 = {
-    'name' : 'Chun Kiat',
-    'contact': '91119999',
-    'email': 'chunkiat@sutd.edu.sg',
-    'slots' : [
-        slot_1
-    ]
-}
-
-subject_1 = {
-    'name' : "10.008 Engineering in the Physical World",
-    'professors' : [prof_1,prof_2]
-}
-
-subject_2 = {
-    'name' : "10.007 Modelling the Systems World",
-    'professors' : [prof_2]
-}
-
-data = {
-    'subjects' : [subject_1, subject_2],
-    'student' : {
-        'name' : 'Elliot',
-        'class' : 'F04',
-        'student_id': '1003501'
-    }
-}        
-
+    
 class Main(App):        
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)        
         self.screenManager = ScreenManager()   
-
+        self.screenManager.dbManager = DBManager()
+        
         loginScreen = LoginScreen(name="LOGIN_SCREEN")
-        loginScreen.onLogin = self.onLogin
+        loginScreen.loginCallback = self.setLoggedIn
         self.screenManager.loginScreen = loginScreen
         self.screenManager.add_widget(loginScreen)
 
@@ -82,16 +36,14 @@ class Main(App):
         professorsScreen = ProfessorsScreen(name="PROFESSORS_SCREEN")        
     
         self.screenManager.professorsScreen = professorsScreen
-        self.screenManager.add_widget(professorsScreen)
+        self.screenManager.add_widget(professorsScreen)            
                 
     def build(self):                    
         return self.screenManager
-
-    #LOGIN IS DONE HERE================================================================================================================================================
-    def onLogin(self):
-        #SET LOGIN DATA HERE ============================================================
-        self.screenManager.subjectsScreen.set_data(data)
-
+    
+    def setLoggedIn(self, data):        
+        self.screenManager.dbManager.login(data)
+        self.screenManager.subjectsScreen.set_data(data)        
         self.screenManager.transition = SlideTransition(direction="left")
         self.screenManager.current = "SUBJECTS_SCREEN"        
         print("logged in")

@@ -10,13 +10,29 @@ i.e.
 
 """
 import time
+from threading import Timer
+
 
 class DBManager:        
-    def login(self, data):
-        pass
-
-    def beginCheckLoginCycle(self):
+    def __init__(self):
+        self.loggedIn = False
+        self.data = {}
         
+    def login(self, data):
+        self.loggedIn = True
+        self.data = data
+
+        print('USER LOGGED IN WITH DATA:')
+        print(data)
+
+    def logout(self):
+        self.loggedIn = False
+        self.data = {}    
+        self.beginCheckLoginCycle() 
+           
+    def beginCheckLoginCycle(self):
+        t = Timer(0.1, self._beginCheckLoginCycle)
+        t.start()        
         #read from firebase
         #if firebase has a current user
         #get data = {
@@ -32,7 +48,14 @@ class DBManager:
         #       class : 'F04'  
         #   }
         # }
-        #call self.login(data)
+        #call self.login(data)        
+        
+    #this is an internal function because it has to be run with a timer (so that it is multithreaded)
+    def _beginCheckLoginCycle(self):
+        
+        if self.loggedIn:
+            return
 
-        time.sleep(0.3)
-        beginCheckLoginCycle()
+        print('Reading from firebase..')
+        time.sleep(1)
+        self.beginCheckLoginCycle()

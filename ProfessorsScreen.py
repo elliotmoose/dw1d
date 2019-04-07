@@ -5,6 +5,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 from kivy.uix.screenmanager import SlideTransition
 from kivy.uix.label import Label
+from kivy.uix.modalview import ModalView
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Rectangle
 
@@ -84,7 +85,8 @@ class ProfessorsScreen(Screen):
 
     def set_student_data(self, student_data):
         self.student_data = student_data
-        self.studentDetailsWidget.set_student_data(student_data)        
+        self.studentDetailsWidget.set_student_data(student_data)     
+        self.slotsView.student_data = student_data   
 
     def on_pre_enter(self, *args):                
         self.update()
@@ -148,12 +150,12 @@ class SlotsWidget(ColorBoxLayout):
         self.contentView = BoxLayout(orientation='vertical', padding=contentPadding, spacing=itemSpacing, pos_hint={'top': 1})    
         self.scrollView.add_widget(self.contentView)
         self.add_widget(self.scrollView)
-
+        self.student_data = {}
+                
 
     def set_slots(self, slots):
         self.slotsData = slots
-
-        print(slots)
+        
         self.contentView.clear_widgets()
         buttonHeight = 120                           
         for i in range(len(slots)):
@@ -171,7 +173,44 @@ class SlotsWidget(ColorBoxLayout):
         return self.slotsData[index]
 
     def select_slot(self, index):
-        pass
+        selectedSlot = self.get_slot_at_index(index)
+
+        modalview = ModalView(size_hint=(None,None), width=600, height=400)
+        # view = ModalView(auto_dismiss=False)
+        container = ColorBoxLayout(orientation='vertical', color=Color(1,1,1,1))
+
+
+        headerLabel = Label(text='Confirm Booking', font_size=30, color=(0,0,0,1))        
+
+        dateLabel = Label(text='Date: {0}'.format(selectedSlot['date']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
+        timeLabel = Label(text='Time: {0}'.format(selectedSlot['time']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
+        costLabel = Label(text='Cost: {0} credits'.format(50),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
+        remaindingLabel = Label(text='Remainder: {0} credits'.format(self.student_data['credits'] - 50),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
+
+        buttonRow = BoxLayout(orientation='horizontal')
+        
+        cancelButton = Button(text='Cancel', size_hint=(None, None), width=300, height=80)
+        cancelButton.on_press = self.close_modal
+        confirmButton = Button(text='Confirm', size_hint=(None, None), width=300, height=80)
+        buttonRow.add_widget(cancelButton)     
+        buttonRow.add_widget(confirmButton)
+
+        container.add_widget(headerLabel)        
+        container.add_widget(dateLabel)        
+        container.add_widget(timeLabel)        
+        container.add_widget(costLabel)        
+        container.add_widget(remaindingLabel)        
+        container.add_widget(buttonRow)
+        modalview.add_widget(container)        
+        self.modalview = modalview
+
+        self.open_modal()    
+
+    def open_modal(self):        
+        self.modalview.open()
+        
+    def close_modal(self):
+        self.modalview.dismiss()
 
 
 class ProfDetailsWidget(ColorBoxLayout):   
