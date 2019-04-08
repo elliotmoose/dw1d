@@ -13,51 +13,25 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition, Slide
 from LoginScreen import LoginScreen
 # from SubjectsScreen import SubjectsScreen
 # from ProfessorsScreen import ProfessorsScreen
-# from DBManager import DBManager
-
+from DBManager import DBManager
+from TimetableScreen import TimetableScreen
     
-class Main(App):        
-
+class Main(ScreenManager):        
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)        
-        self.screenManager = ScreenManager()   
-        # self.screenManager.dbManager = DBManager()
+        super().__init__(**kwargs)                
+        self.dbManager = DBManager()
         
-        loginScreen = LoginScreen(name="LOGIN_SCREEN")
-        loginScreen.requestLogin = self.requestLogin
-        self.screenManager.loginScreen = loginScreen
-        self.screenManager.add_widget(loginScreen)
+        #INITIALIZE SCREENS
+        loginScreen = LoginScreen(name="LOGIN_SCREEN")        
+        self.loginScreen = loginScreen
+        self.add_widget(loginScreen)
 
-        # subjectsScreen = SubjectsScreen(name="SUBJECTS_SCREEN")
-        
-        # self.screenManager.subjectsScreen = subjectsScreen
-        # self.screenManager.add_widget(subjectsScreen)
+        timetableScreen = TimetableScreen(name="TIMETABLE_SCREEN")        
+        self.timetableScreen = timetableScreen
+        self.add_widget(timetableScreen)                          
 
-        # professorsScreen = ProfessorsScreen(name="PROFESSORS_SCREEN")        
-    
-        # self.screenManager.professorsScreen = professorsScreen
-        # self.screenManager.add_widget(professorsScreen)            
-                
+class ConsoleApp(App):
     def build(self):                    
-        return self.screenManager
-    
-    def requestLogin(self, username, password, callback):        
-        print(username)
-        print(password)
+        return Main()
 
-        if username=='elliot' and password=='12345':
-            callback(True)
-
-            self.screenManager.dbManager.login(data)
-            self.screenManager.subjectsScreen.set_data(data)        
-            self.screenManager.transition = SlideTransition(direction="left")
-            self.screenManager.current = "SUBJECTS_SCREEN"        
-            print("logged in")
-        else:
-            callback(False)
-
-        
-
-    
-
-Main().run()
+ConsoleApp().run()

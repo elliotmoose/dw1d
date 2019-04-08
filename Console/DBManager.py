@@ -17,7 +17,10 @@ class DBManager:
         self.data = {}
         
     def login(self, username, password):
-        pass
+        if username=='elliot' and password=='12345':
+            return True, {'data': 'test data'}
+        else:
+            return False, None
 
     def logout(self):
         self.loggedIn = False

@@ -11,13 +11,39 @@ i.e.
 """
 import time
 from threading import Timer
+import pyrebase
+import TemplateData
 
+FIREBASE_ENDPOINT = 'https://basic-dc724.firebaseio.com/'
+config = {
+  "apiKey": "AIzaSyByqBZnJMeBo9CjNn111hRYWo34ipRIOwM",
+  "authDomain": "basic-dc724.firebaseapp.com",
+  "databaseURL": "https://basic-dc724.firebaseio.com/",
+  "storageBucket": "basic-dc724.appspot.com"
+}
 
 class DBManager:        
     def __init__(self):
         self.loggedIn = False
-        self.data = {}
+        self.data = {}        
         
+        #connect
+        firebase = pyrebase.initialize_app(config)
+        self.db = firebase.database()                
+    
+    def InitalizeFirebase(self):
+
+        confirmed = input('Warning: Initializing removes all current data. Continue? y/n\n')
+        
+        if confirmed != 'y':
+            return
+
+        print('Initializing database...')
+        
+        self.db.update(TestData.dbtemplate)
+        
+        print('Initializing done!')
+
     def login(self, data):
         self.loggedIn = True
         self.data = data
@@ -59,3 +85,8 @@ class DBManager:
         print('Reading from firebase..')
         time.sleep(1)
         self.beginCheckLoginCycle()
+
+
+if __name__ == '__main__':
+    db = DBManager()
+    db.InitalizeFirebase()

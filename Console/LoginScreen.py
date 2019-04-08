@@ -20,31 +20,31 @@ class LoginScreen(Screen):
         passwordInput = TextInput(password=True, write_tab=False)
         self.passwordInput = passwordInput
         passwordInput.hint_text = 'Password'
-        taptologin = Button(text="Login")
-        taptologin.on_press = self.login
+        loginButton = Button(text="Login")
+        loginButton.on_press = self.login
 
         boxLayout.add_widget(usernameInput)
         boxLayout.add_widget(passwordInput)
-        boxLayout.add_widget(taptologin)
+        boxLayout.add_widget(loginButton)
 
         container.add_widget(boxLayout)
         self.add_widget(container)
-    
-    def on_enter(self, *args):
-        super().on_enter(*args)
 
-        print('Logged Out: Awaiting Login...')
-        # self.parent.dbManager.logout()
-
-    # def beginCheckLogin(self):        
-    #     data = self.parent.dbManager.beginCheckLoginCycle() #this function 
-    #     self.loginCallback(data)                
+        #test
+        usernameInput.text = 'elliot'
+        passwordInput.text = '12345'            
 
     def login(self):
         username = self.usernameInput.text
-        password = self.passwordInput.text
-        self.requestLogin(username, password, self.loginCallback)        
+        password = self.passwordInput.text        
+        success, data = self.parent.dbManager.login(username, password)        
 
-    def loginCallback(self, success):
-        print(success)
+        if success:
+            self.parent.timetableScreen.set_data(data)        
+            self.parent.transition = SlideTransition(direction="left")
+            self.parent.current = "TIMETABLE_SCREEN"                
+        else:
+            print('login failed')
+
+
 
