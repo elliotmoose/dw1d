@@ -17,14 +17,6 @@ class LoginScreen(Screen):
         print('Logged Out: Awaiting Login...')
         self.parent.dbManager.logout()
 
-    # def beginCheckLogin(self):        
-    #     data = self.parent.dbManager.beginCheckLoginCycle() #this function 
-    #     self.loginCallback(data)                
-
     def nextScreen(self):
-        self.loginCallback(TESTDATA)
-        # try:
-            
-        # except:
-        #     print('No callback defined')            
+        self.parent.dbManager.login(TESTDATA)
 

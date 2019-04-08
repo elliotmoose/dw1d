@@ -53,11 +53,10 @@ class StudentDetailsWidget(Widget):
 
         
 
-    def set_student_data(self, data):        
-        print(self.data)
+    def set_student_data(self, data):                
         self.data = data
         self.nameLabel.text = 'Name: ' + data['name']                
-        self.idLabel.text = 'ID: ' + data['student_id']                
+        self.idLabel.text = 'ID: ' + data['id']                
         self.classLabel.text = 'Class: ' + data['class']                
         self.creditsLabel.text = 'Credits: {0}'.format(data['credits'])
         
@@ -68,4 +67,4 @@ class StudentDetailsWidget(Widget):
                 self._rectangle.size = self.size  
                 self._rectangle.pos = self.pos          
         finally:
-            print("no rect")    
+            pass

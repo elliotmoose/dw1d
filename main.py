@@ -16,38 +16,38 @@ from ProfessorsScreen import ProfessorsScreen
 from DBManager import DBManager
 
     
-class Main(App):        
+class BookingApp(App):        
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)        
-        self.screenManager = ScreenManager()   
-        self.screenManager.dbManager = DBManager()
+        self.screenManager = Main()   
         
-        loginScreen = LoginScreen(name="LOGIN_SCREEN")
-        loginScreen.loginCallback = self.setLoggedIn
-        self.screenManager.loginScreen = loginScreen
-        self.screenManager.add_widget(loginScreen)
-
-        subjectsScreen = SubjectsScreen(name="SUBJECTS_SCREEN")
-        
-        self.screenManager.subjectsScreen = subjectsScreen
-        self.screenManager.add_widget(subjectsScreen)
-
-        professorsScreen = ProfessorsScreen(name="PROFESSORS_SCREEN")        
-    
-        self.screenManager.professorsScreen = professorsScreen
-        self.screenManager.add_widget(professorsScreen)            
-                
     def build(self):                    
         return self.screenManager
-    
-    def setLoggedIn(self, data):        
-        self.screenManager.dbManager.login(data)
-        self.screenManager.subjectsScreen.set_data(data)        
-        self.screenManager.transition = SlideTransition(direction="left")
-        self.screenManager.current = "SUBJECTS_SCREEN"        
-        print("logged in")
 
-    
 
-Main().run()
+class Main(ScreenManager):        
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)                
+        
+        self.dbManager = DBManager(loginCallback=self.onLoggedIn)        
+        
+        loginScreen = LoginScreen(name="LOGIN_SCREEN")        
+        self.loginScreen = loginScreen
+        self.add_widget(loginScreen)
+
+        subjectsScreen = SubjectsScreen(name="SUBJECTS_SCREEN")        
+        self.subjectsScreen = subjectsScreen
+        self.add_widget(subjectsScreen)
+
+        professorsScreen = ProfessorsScreen(name="PROFESSORS_SCREEN")            
+        self.professorsScreen = professorsScreen
+        self.add_widget(professorsScreen)         
+    
+    def onLoggedIn(self, full_data):                
+        self.subjectsScreen.set_data(full_data)        
+        self.transition = SlideTransition(direction="left")
+        self.current = "SUBJECTS_SCREEN"                
+
+
+BookingApp().run()

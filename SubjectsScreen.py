@@ -45,10 +45,9 @@ class SubjectsScreen(Screen):
         self.studentDetailsWidget = StudentDetailsWidget(size_hint_y=None, height=200)
         self.add_widget(self.studentDetailsWidget) 
 
-    def set_data(self, data):
-        print('subject set data')
+    def set_data(self, data):        
         self.data = data
-        self.studentDetailsWidget.set_student_data(data['student'])        
+        self.studentDetailsWidget.set_student_data(data['current'])        
         self.update()
 
     def on_pre_enter(self, *args):                
@@ -57,17 +56,17 @@ class SubjectsScreen(Screen):
     def update(self):
         self.contentView.clear_widgets()        
         buttonHeight = 200
-        for i in range(len(self.data['subjects'])):
+        for i in range(len(self.data['modules'])):
             
             subjectButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
             subjectButton.size_hint_y = None 
             subjectButton.height = buttonHeight
-            subjectButton.text = self.data['subjects'][i]['name']
+            subjectButton.text = self.data['modules'][i]['name']
             subjectButton.on_press=partial(self.select_subject, i)            
             self.contentView.add_widget(subjectButton)
 
         self.contentView.size_hint_y = None
-        self.contentView.height = len(self.data['subjects'])*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
+        self.contentView.height = len(self.data['modules'])*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
         
     def back(self):
         self.parent.transition = SlideTransition(direction="right")
@@ -76,6 +75,6 @@ class SubjectsScreen(Screen):
     def select_subject(self, index):
         self.parent.transition = SlideTransition(direction="left")
         self.parent.current = 'PROFESSORS_SCREEN'
-        self.parent.professorsScreen.set_student_data(self.data['student'])
-        self.parent.professorsScreen.set_subject_data(self.data['subjects'][index])
+        self.parent.professorsScreen.set_student_data(self.data['current'])
+        self.parent.professorsScreen.set_subject_data(self.data['modules'][index])
 

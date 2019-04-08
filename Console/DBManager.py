@@ -25,4 +25,4 @@ class DBManager:
     def logout(self):
         self.loggedIn = False
         self.data = {}    
-        self.beginCheckLoginCycle()         
+        # self.beginCheckLoginCycle()         

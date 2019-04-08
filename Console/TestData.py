@@ -46,13 +46,3 @@ data = {
         'credits' : 500
     }
 }  
-
-
-dbtemplate = {}
-
-dbtemplate['current'] = []
-        
-dbtemplate['professors'] = [prof_1, prof_2]
-
-dbtemplate['students'] = []
-dbtemplate ['slots'] = [slot_1, slot_2] 
