@@ -16,6 +16,8 @@ import TemplateData
 import copy
 
 FIREBASE_ENDPOINT = 'https://basic-dc724.firebaseio.com/'
+REFRESH_RATE = 60 #firebase calls are still a bottleneck
+
 config = {
   "apiKey": "AIzaSyByqBZnJMeBo9CjNn111hRYWo34ipRIOwM",
   "authDomain": "basic-dc724.firebaseapp.com",
@@ -66,7 +68,7 @@ class DBManager:
         self.beginCheckLoginCycle() 
            
     def beginCheckLoginCycle(self):
-        t = Timer(0.1, self._beginCheckLoginCycle)
+        t = Timer(1/REFRESH_RATE, self._beginCheckLoginCycle)
         t.start()        
  
     #this is an internal function because it has to be run with a timer (so that it is multithreaded)
@@ -87,7 +89,7 @@ class DBManager:
             return
 
         #call itself to keep checking database
-        time.sleep(1)
+        time.sleep(1/REFRESH_RATE)
         self.beginCheckLoginCycle()
 
     #takes in the full database and structures the data accordingly, making the links between the separate tables
