@@ -13,6 +13,7 @@ import time
 from threading import Timer
 import pyrebase
 import TemplateData
+import copy
 
 FIREBASE_ENDPOINT = 'https://basic-dc724.firebaseio.com/'
 config = {
@@ -81,7 +82,8 @@ class DBManager:
         current = self.db.child('current').get().val()
         if current != None:            
             full_db = self.db.get().val()
-            self.login(self.structure_data(full_db))
+            structured_data = self.structure_data(full_db, current)
+            self.login(structured_data)
             return
 
         #call itself to keep checking database
@@ -89,8 +91,41 @@ class DBManager:
         self.beginCheckLoginCycle()
 
     #takes in the full database and structures the data accordingly, making the links between the separate tables
-    def structure_data(self, unprocessed_data):            
-        return unprocessed_data
+    def structure_data(self, full_data, current_data):            
+        
+        #make a replica of the student details as a starting point
+        current_student = copy.deepcopy(current_data)
+        output = {}
+
+        #step 1: get all subjects that the student has
+        subjects = []
+        for subject in full_data['modules']:
+            if subject['id'] in current_data['modules']:
+                                
+                #step 2: for each subject, get the professors that belong to that subject
+                professors = []
+                for prof in full_data['professors']:
+                    if subject['id'] in prof['modules']:
+                        
+                        
+                        #step 3: for each professor, get the slots that belong to that professor
+                        slots = []
+                        for slot in full_data['slots']:
+                            if slot['prof_id'] == prof['id']:
+                                slots.append(copy.deepcopy(slot))                        
+
+                        profdata = copy.deepcopy(prof)
+                        profdata['slots'] = slots
+                        professors.append(profdata)
+                
+                subjectdata = copy.deepcopy(subject)
+                subjectdata['professors'] = professors
+                subjects.append(subjectdata)   
+        
+        output['modules'] = subjects        
+        output['current'] = current_student             
+
+        return output
 
 if __name__ == '__main__':
     db = DBManager()

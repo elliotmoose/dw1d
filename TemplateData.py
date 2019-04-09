@@ -6,9 +6,10 @@ def slot(time, date):
         'student_id': 'null'
     }
 
-def prof(name, contact, email, modules):
+def prof(name,id, contact, email, modules):
     return {
         'name' : name,
+        'id': id,
         'contact': contact,
         'email': email,
         'modules' : modules
@@ -35,9 +36,9 @@ def module(name, id):
 slot1 = slot('0800', '24/08/19')
 slot2 = slot('1000', '24/08/19')
 
-meixuan = prof('Mei Xuan', '91111000', 'meixuan@sutd.edu.sg',['10.008', '10.011'])
-chunkiat = prof('Chun Kiat', '91111999', 'chunkiat@sutd.edu.sg',['10.007'])
-okakurniawan = prof('Oka Kurniawan', '90000999', 'okakurniawan@sutd.edu.sg',['10.009'])
+meixuan = prof('Mei Xuan', 0, '91111000', 'meixuan@sutd.edu.sg',['10.008', '10.011'])
+chunkiat = prof('Chun Kiat',1, '91111999', 'chunkiat@sutd.edu.sg',['10.007'])
+okakurniawan = prof('Oka Kurniawan',2, '90000999', 'okakurniawan@sutd.edu.sg',['10.009'])
 
 biology = module('Introduction to Biology', '10.012')
 physics = module('Engineering in the Physical World', '10.008')
