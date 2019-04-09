@@ -92,7 +92,16 @@ class ProfessorsScreen(Screen):
         self.update()
 
     def on_leave(self, *args):
-        self.profDetailsView.reset_prof_data()        
+        #reset all views
+        self.subjectData = {
+            'name': 'No subject selected',
+            'professors' : []            
+        }
+
+        self.update()
+        self.slotsView.set_slots([]) 
+        self.profDetailsView.reset_prof_data()     
+
 
     def update(self):
         self.contentView.clear_widgets()  
@@ -114,12 +123,7 @@ class ProfessorsScreen(Screen):
         self.parent.transition = SlideTransition(direction="right")
         self.parent.current = 'SUBJECTS_SCREEN'
 
-    def select_prof(self, index):
-        # self.parent.transition = SlideTransition(direction="left")
-        # self.parent.current = 'SLOTS_SCREEN'
-        # self.parent.slotsScreen.set_student_data(self.student_data)
-        # self.parent.slotsScreen.set_subject_data(self.subjectData)
-        # self.parent.slotsScreen.set_prof_data(self.get_prof(index))        
+    def select_prof(self, index):    
         self.reset_button_colors()    
         self.profButtons[index].background_color = (142/255, 229/255, 179/255,1)
         self.profButtons[index].color = profButtonColor
