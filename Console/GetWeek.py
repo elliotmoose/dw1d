@@ -25,3 +25,7 @@ def getcurrentweek(day, date, month, year, offset = 3):
         print(current_date)
         
 getcurrentweek(day, date, month, year)
+
+
+
+
