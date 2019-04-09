@@ -61,7 +61,7 @@ class SubjectsScreen(Screen):
             subjectButton = Button(background_normal='', color=(0.1,0.1,0.1,1), font_size=50)
             subjectButton.size_hint_y = None 
             subjectButton.height = buttonHeight
-            subjectButton.text = self.data['modules'][i]['name']
+            subjectButton.text = '{0} {1}'.format(self.data['modules'][i]['id'], self.data['modules'][i]['name'])
             subjectButton.on_press=partial(self.select_subject, i)            
             self.contentView.add_widget(subjectButton)
 

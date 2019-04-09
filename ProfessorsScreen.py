@@ -80,7 +80,7 @@ class ProfessorsScreen(Screen):
 
     def set_subject_data(self, subject):
         self.subjectData = subject
-        self.subjectLabel.text = subject['name']
+        self.subjectLabel.text = '{0} {1}'.format(subject['id'], subject['name'])
         self.update()
 
     def set_student_data(self, student_data):
