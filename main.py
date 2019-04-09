@@ -25,6 +25,11 @@ class BookingApp(App):
     def build(self):                    
         return self.screenManager
 
+    def on_stop(self):
+        super().on_stop()
+
+        self.screenManager.dbManager.cleanup()
+
 
 class Main(ScreenManager):        
     def __init__(self, **kwargs):

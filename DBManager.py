@@ -35,6 +35,10 @@ class DBManager:
         firebase = pyrebase.initialize_app(config)
         self.db = firebase.database()                
     
+    def cleanup(self):
+        print('Cleaning Up...')
+        self.cleanup = True
+
     def InitalizeFirebase(self):
 
         confirmed = input('Warning: Initializing removes all current data. Continue? y/n\n')
@@ -75,7 +79,7 @@ class DBManager:
     def _beginCheckLoginCycle(self):
         
         #if it is logged in, no more need to check
-        if self.loggedIn:
+        if self.loggedIn or self.cleanup == True:
             return
 
         print('Reading from firebase..')
