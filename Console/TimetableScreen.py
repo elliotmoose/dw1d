@@ -4,7 +4,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.graphics import Color
 
-#shankai was here
+#shankai was not here
 from ColorBoxLayout import ColorBoxLayout
 
 class TimetableScreen(Screen):
