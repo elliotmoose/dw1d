@@ -56,14 +56,14 @@ class DBManager:
         
         print('Initializing done!')
 
-    def login(self, data):
+    def login(self, structured_data):
         self.loggedIn = True
-        self.data = data
+        self.data = structured_data
 
         print('USER LOGGED IN')        
 
         if self.loginCallback != None:
-            self.loginCallback(data)
+            self.loginCallback(structured_data)
 
     def logout(self):
         self.db.child('current').remove()
@@ -132,6 +132,20 @@ class DBManager:
         output['current'] = current_student             
 
         return output
+
+    def confirm_slot(self, slot_to_confirm):
+        print('Confirming Slot...')
+        allslots = self.db.child('slots').get().val()
+        student_id = self.db.child('current').get().val()['id']
+                
+        print(slot_to_confirm)                
+
+        #find the slot that needs to be confirmed
+        for i in range(len(allslots)):            
+            if slot_to_confirm == allslots[i]:
+                print('found slot!')
+                #update database with student_id, signifying the slot has been booked
+                self.db.update({'slots/{0}/student_id'.format(i): student_id})
 
 if __name__ == '__main__':
     db = DBManager()

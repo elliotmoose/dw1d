@@ -62,6 +62,7 @@ class ProfessorsScreen(Screen):
 
         #slots
         self.slotsView = SlotsWidget(orientation='vertical', color=Color(228/255,228/255,228/255,1))        
+        self.slotsView.confirm_slot = self.confirm_slot
 
         #prof detail        
         self.profDetailsView = ProfDetailsWidget(orientation='vertical', color=Color(248/255,248/255,248/255,1))
@@ -145,6 +146,8 @@ class ProfessorsScreen(Screen):
     def get_prof_at_index(self, index):
         return self.subjectData['professors'][index]
 
+    def confirm_slot(self, slot):        
+        self.parent.dbManager.confirm_slot(slot)
 
 class SlotsWidget(ColorBoxLayout):
     def __init__(self, *args, **kwargs):
@@ -196,6 +199,7 @@ class SlotsWidget(ColorBoxLayout):
         cancelButton = Button(text='Cancel', size_hint=(None, None), width=300, height=80)
         cancelButton.on_press = self.close_modal
         confirmButton = Button(text='Confirm', size_hint=(None, None), width=300, height=80)
+        confirmButton.on_press = partial(self.confirm_slot, selectedSlot)            
         buttonRow.add_widget(cancelButton)     
         buttonRow.add_widget(confirmButton)
 
@@ -215,6 +219,7 @@ class SlotsWidget(ColorBoxLayout):
         
     def close_modal(self):
         self.modalview.dismiss()
+    
 
 
 class ProfDetailsWidget(ColorBoxLayout):   

@@ -4,7 +4,6 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.graphics import Color
 
-
 #asdaklfjlskdj
 #shankai was not here
 #elliot was here
@@ -17,3 +16,6 @@ class TimetableScreen(Screen):
 
     def set_data(self, data):
         self.data = data
+
+    
+    

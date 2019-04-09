@@ -42,7 +42,7 @@ meixuan = prof('Mei Xuan', 0, '91111000', 'meixuan@sutd.edu.sg',['10.008', '10.0
 chunkiat = prof('Chun Kiat',1, '91111999', 'chunkiat@sutd.edu.sg',['10.007'])
 okakurniawan = prof('Oka Kurniawan',2, '90000999', 'okakurniawan@sutd.edu.sg',['10.009'])
 
-elliot = student('Elliot Koh', '1003501', 'F04', '1234 5678 9123 4567', '91000092', 'elliot@sutd.edu.sg',['10.007', '10.009', '10.008', '10.011'])
+elliot = student('Elliot Koh', '1003501', 'F04', '372390003533', '91000092', 'elliot@sutd.edu.sg',['10.007', '10.009', '10.008', '10.011'])
 sid = student('Sidharth', '1002345', 'F04', '1234 5678 9123 4567', '91123123', 'sidharth@sutd.edu.sg',['10.007', '10.008', '10.011'])
 
 biology = module('Introduction to Biology', '10.012')
