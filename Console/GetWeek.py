@@ -8,8 +8,6 @@ day = DT.datetime.today().weekday() #which day today is
 #variable offset
 offset = 3
 
-
-
 def getWeek(offset):
     #takes into account case of 1st page den following pages
     if offset == 0:
@@ -50,6 +48,7 @@ def fri(a):
 
 #test getWeek function, just run
 print (getWeek(offset))
+
 
 
 
