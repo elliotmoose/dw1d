@@ -5,8 +5,8 @@ import datetime as DT
 today = DT.date.today()  # today's date
 day = DT.datetime.today().weekday() #which day today is
 
-#variable offset
-offset = 3
+#variable offset (feel free to change)
+offset = 0
 
 def getWeek(offset):
     #takes into account case of 1st page den following pages
@@ -47,8 +47,36 @@ def fri(a):
     return friday
 
 #test getWeek function, just run
-print (getWeek(offset))
+a = (getWeek(offset))
+#print(a)
 
+#This function creates a list of lists which indexes correspond to the day
+#The nested lists contain 20 dictionaries of time slots from 08:00 to 18:00 in 30min intervals 
+def getButtons(weeklist):
+    output = []
+    for i in range(5):
+        hours = 7
+        days = []
+        for j in range(21):
+            slots = {}
+            if j%2 == 0:
+                minutes = '00'
+                hours += 1
+            else:
+                minutes = '30'
+            hour = str(hours)
+            if len(hour) == 1:
+                hour = '0' + hour
+            slots['Time: '] = '{}:{}'.format(hour, minutes)
+            slots['Date: '] = weeklist[i]
+            days.append(slots)
+        output.append(days)
+        
+    return output
 
+#print(getButtons(a))
+            
+            
+        
 
 
