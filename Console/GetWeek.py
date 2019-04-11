@@ -1,6 +1,6 @@
 import dateutil.relativedelta as rdelta
 import datetime as DT
-
+import uuid
 #global today and day variables
 today = DT.date.today()  # today's date
 day = DT.datetime.today().weekday() #which day today is
@@ -67,8 +67,9 @@ def getButtons(weeklist):
             hour = str(hours)
             if len(hour) == 1:
                 hour = '0' + hour
-            slots['time: '] = '{}:{}'.format(hour, minutes)
-            slots['date: '] = weeklist[i]
+            slots['time'] = '{}:{}'.format(hour, minutes)
+            slots['date'] = weeklist[i]
+            slots['id'] = str(uuid.uuid1())
             days.append(slots)
         output.append(days)
         
