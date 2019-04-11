@@ -63,6 +63,7 @@ class ProfessorsScreen(Screen):
         #slots
         self.slotsView = SlotsWidget(orientation='vertical', color=Color(228/255,228/255,228/255,1))        
         self.slotsView.confirm_slot_callback = self.confirm_slot
+        self.slotsView.logout = self.logout
 
         #prof detail        
         self.profDetailsView = ProfDetailsWidget(orientation='vertical', color=Color(248/255,248/255,248/255,1))
@@ -148,6 +149,10 @@ class ProfessorsScreen(Screen):
 
     def confirm_slot(self, slot_uuid):        
         self.parent.dbManager.confirm_slot(slot_uuid)
+
+    def logout(self):
+        self.parent.transition = SlideTransition(direction="right")
+        self.parent.current = 'LOGIN_SCREEN'
 
 class SlotsWidget(ColorBoxLayout):
     def __init__(self, *args, **kwargs):
@@ -253,7 +258,7 @@ class SlotsWidget(ColorBoxLayout):
         self.close_modal()    
 
     def logout(self):
-        pass
+        self.logout()
 
 
 class ProfDetailsWidget(ColorBoxLayout):   
