@@ -48,7 +48,7 @@ def fri(a):
 
 #test getWeek function, just run
 a = (getWeek(offset))
-#print(a)
+# print(a)
 
 #This function creates a list of lists which indexes correspond to the day
 #The nested lists contain 20 dictionaries of time slots from 08:00 to 18:00 in 30min intervals 
@@ -67,14 +67,14 @@ def getButtons(weeklist):
             hour = str(hours)
             if len(hour) == 1:
                 hour = '0' + hour
-            slots['Time: '] = '{}:{}'.format(hour, minutes)
-            slots['Date: '] = weeklist[i]
+            slots['time: '] = '{}:{}'.format(hour, minutes)
+            slots['date: '] = weeklist[i]
             days.append(slots)
         output.append(days)
         
     return output
 
-#print(getButtons(a))
+print(getButtons(a))
             
             
         
