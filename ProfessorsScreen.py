@@ -62,7 +62,7 @@ class ProfessorsScreen(Screen):
 
         #slots
         self.slotsView = SlotsWidget(orientation='vertical', color=Color(228/255,228/255,228/255,1))        
-        self.slotsView.confirm_slot = self.confirm_slot
+        self.slotsView.confirm_slot_callback = self.confirm_slot
 
         #prof detail        
         self.profDetailsView = ProfDetailsWidget(orientation='vertical', color=Color(248/255,248/255,248/255,1))
@@ -186,7 +186,6 @@ class SlotsWidget(ColorBoxLayout):
         # view = ModalView(auto_dismiss=False)
         container = ColorBoxLayout(orientation='vertical', color=Color(1,1,1,1))
 
-
         headerLabel = Label(text='Confirm Booking', font_size=30, color=(0,0,0,1))        
 
         dateLabel = Label(text='Date: {0}'.format(selectedSlot['date']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
@@ -214,12 +213,48 @@ class SlotsWidget(ColorBoxLayout):
 
         self.open_modal()    
 
+    def on_confirmed_booking(self, confirmed_slot):
+        confirmationmodalview = ModalView(size_hint=(None,None), width=600, height=400)
+        # view = ModalView(auto_dismiss=False)
+        container = ColorBoxLayout(orientation='vertical', color=Color(1,1,1,1))
+
+        headerLabel = Label(text='Booking Confirmed!', font_size=30, color=(0,0,0,1))        
+
+        dateLabel = Label(text='Date: {0}'.format(confirmed_slot['date']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
+        timeLabel = Label(text='Time: {0}'.format(confirmed_slot['time']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
+        costLabel = Label(text='Cost: {0} credits'.format(50),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
+        remaindingLabel = Label(text='Remainding Credits: {0}'.format(self.student_data['credits'] - 50),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
+
+        buttonRow = BoxLayout(orientation='horizontal')
+        
+        backButton = Button(text='Back', size_hint=(None, None), width=300, height=80)
+        backButton.on_press = self.close_modal
+        logoutButton = Button(text='Logout', size_hint=(None, None), width=300, height=80)
+        logoutButton.on_press = partial(self.logout)            
+        buttonRow.add_widget(backButton)     
+        buttonRow.add_widget(logoutButton)
+
+        container.add_widget(headerLabel)        
+        container.add_widget(dateLabel)        
+        container.add_widget(timeLabel)        
+        container.add_widget(costLabel)        
+        container.add_widget(remaindingLabel)        
+        container.add_widget(buttonRow)
+        confirmationmodalview.add_widget(container)        
+        self.confirmationmodalview = confirmationmodalview
+
     def open_modal(self):        
         self.modalview.open()
         
     def close_modal(self):
         self.modalview.dismiss()
     
+    def confirm_slot(self, slot):
+        self.confirm_slot_callback(slot)
+        self.close_modal()    
+
+    def logout(self):
+        pass
 
 
 class ProfDetailsWidget(ColorBoxLayout):   

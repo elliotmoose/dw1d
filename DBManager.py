@@ -56,6 +56,10 @@ class DBManager:
         
         print('Initializing done!')
 
+    #For testing purposes, this function lets you simulate the tapping of a card and login
+    def FirebaseForceLogin(self):
+        self.db.update({'current': TemplateData.loggedindbtemplate['current']})
+
     def login(self, structured_data):
         self.loggedIn = True
         self.data = structured_data
@@ -136,8 +140,11 @@ class DBManager:
     def confirm_slot(self, slot_to_confirm):
         print('Confirming Slot...')
         allslots = self.db.child('slots').get().val()
-        student_id = self.db.child('current').get().val()['id']
-                
+        student = self.db.child('current').get().val()
+        student_id = student['id']
+        price = 50
+        newcredits = student['credits'] - price        
+        
         print(slot_to_confirm)                
 
         #find the slot that needs to be confirmed
@@ -145,8 +152,16 @@ class DBManager:
             if slot_to_confirm == allslots[i]:
                 print('found slot!')
                 #update database with student_id, signifying the slot has been booked
-                self.db.update({'slots/{0}/student_id'.format(i): student_id})
+                self.db.update({
+                    'slots/{0}/student_id'.format(i): student_id,
+                    'students/{0}/credits'.format(student_id) : newcredits
+                    })
 
+import sys
 if __name__ == '__main__':
     db = DBManager()
-    db.InitalizeFirebase()
+
+    if len(sys.argv) > 1 and sys.argv[1] == 'login':
+        db.FirebaseForceLogin()
+    else:    
+        db.InitalizeFirebase()
