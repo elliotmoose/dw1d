@@ -1,9 +1,12 @@
+import uuid
+
 def slot(time, date, prof_id):
     return {
         'time' : time,
         'date' : date,
         'prof_id': prof_id,
-        'student_id': 'null'
+        'student_id': 'null',
+        'id': newuuid()
     }
 
 def prof(name,id, contact, email, modules):
@@ -33,6 +36,8 @@ def module(name, id):
         'id' : id
     }
 
+def newuuid():
+    return str(uuid.uuid4())
 slot1 = slot('0800', '24/08/19', 0)
 slot2 = slot('1000', '24/08/19', 0)
 slot3 = slot('1200', '23/08/19', 1)
@@ -53,9 +58,18 @@ digitalworld = module('Digital World', '10.009')
 dbtemplate = {}
 dbtemplate['current'] = []        
 dbtemplate['professors'] = [meixuan, chunkiat, okakurniawan]
-dbtemplate['students'] = [elliot, sid]
+dbtemplate['students'] = {
+    elliot['id']: elliot, 
+    sid['id'] : sid
+}
 dbtemplate['modules'] = [biology, physics, modellingsystems, digitalworld]
-dbtemplate['slots'] = [slot1, slot2, slot3, slot4] 
+# dbtemplate['slots'] = [slot1, slot2, slot3, slot4] 
+dbtemplate['slots'] = {
+    slot1['id'] : slot1, 
+    slot2['id'] : slot2, 
+    slot3['id'] : slot3, 
+    slot4['id'] : slot4, 
+}
 
 import copy
 loggedindbtemplate = copy.deepcopy(dbtemplate)

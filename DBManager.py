@@ -28,7 +28,7 @@ config = {
 class DBManager:        
     def __init__(self, loginCallback=None):
         self.loggedIn = False
-        self.data = {}        
+        self.structured_data = {}        
         self.loginCallback = loginCallback
         
         #connect
@@ -62,7 +62,7 @@ class DBManager:
 
     def login(self, structured_data):
         self.loggedIn = True
-        self.data = structured_data
+        self.structured_data = structured_data
 
         print('USER LOGGED IN')        
 
@@ -72,7 +72,7 @@ class DBManager:
     def logout(self):
         self.db.child('current').remove()
         self.loggedIn = False
-        self.data = {}    
+        self.structured_data = {}    
         self.beginCheckLoginCycle() 
            
     def beginCheckLoginCycle(self):
@@ -92,6 +92,7 @@ class DBManager:
         current = self.db.child('current').get().val()
         if current != None:            
             full_db = self.db.get().val()
+            self.full_data = full_db
             structured_data = self.structure_data(full_db, current)
             self.login(structured_data)
             return
@@ -119,10 +120,10 @@ class DBManager:
                         
                         
                         #step 3: for each professor, get the slots that belong to that professor
-                        slots = []
-                        for slot in full_data['slots']:
+                        slots = {}                     
+                        for slot in full_data['slots'].values():
                             if slot['prof_id'] == prof['id']:
-                                slots.append(copy.deepcopy(slot))                        
+                                slots[slot['id']] = copy.deepcopy(slot)                        
 
                         profdata = copy.deepcopy(prof)
                         profdata['slots'] = slots
@@ -137,25 +138,28 @@ class DBManager:
 
         return output
 
-    def confirm_slot(self, slot_to_confirm):
+    def confirm_slot(self, slot_uuid):
         print('Confirming Slot...')
-        allslots = self.db.child('slots').get().val()
-        student = self.db.child('current').get().val()
+        # allslots = self.db.child('slots').get().val()
+        # student = self.db.child('current').get().val()
+
+        allslots = self.full_data['slots']
+        student = self.full_data['current']
+        allstudents = self.full_data['students']
         student_id = student['id']
+        # student_index = 
         price = 50
         newcredits = student['credits'] - price        
         
-        print(slot_to_confirm)                
+        print('new credits: ', newcredits)    
 
-        #find the slot that needs to be confirmed
-        for i in range(len(allslots)):            
-            if slot_to_confirm == allslots[i]:
-                print('found slot!')
-                #update database with student_id, signifying the slot has been booked
-                self.db.update({
-                    'slots/{0}/student_id'.format(i): student_id,
-                    'students/{0}/credits'.format(student_id) : newcredits
-                    })
+        #update database with student_id, signifying the slot has been booked
+        self.db.update({
+            'slots/{0}/student_id'.format(slot_uuid): student_id,
+            'students/{0}/credits'.format(student_id) : newcredits
+            })
+                
+                
 
 import sys
 if __name__ == '__main__':
@@ -164,4 +168,4 @@ if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'login':
         db.FirebaseForceLogin()
     else:    
-        db.InitalizeFirebase()
+        db.InitalizeFirebase()    

@@ -100,7 +100,7 @@ class ProfessorsScreen(Screen):
         }
 
         self.update()
-        self.slotsView.set_slots([]) 
+        self.slotsView.set_slots({}) 
         self.profDetailsView.reset_prof_data()     
 
 
@@ -146,8 +146,8 @@ class ProfessorsScreen(Screen):
     def get_prof_at_index(self, index):
         return self.subjectData['professors'][index]
 
-    def confirm_slot(self, slot):        
-        self.parent.dbManager.confirm_slot(slot)
+    def confirm_slot(self, slot_uuid):        
+        self.parent.dbManager.confirm_slot(slot_uuid)
 
 class SlotsWidget(ColorBoxLayout):
     def __init__(self, *args, **kwargs):
@@ -160,27 +160,24 @@ class SlotsWidget(ColorBoxLayout):
         self.student_data = {}
                 
 
-    def set_slots(self, slots):
+    def set_slots(self, slots):        
         self.slotsData = slots
         
         self.contentView.clear_widgets()
-        buttonHeight = 120                           
-        for i in range(len(slots)):
+        buttonHeight = 120                                   
+        for slot in slots.values():
             slotButton = Button(background_normal='',color=profButtonTextColor, font_size=40)            
             slotButton.size_hint_y = None 
             slotButton.height = buttonHeight
-            slotButton.text = self.get_slot_at_index(i)['time']
-            slotButton.on_press=partial(self.select_slot, i)            
+            slotButton.text = slot['time']
+            slotButton.on_press=partial(self.select_slot, slot['id'])            
             self.contentView.add_widget(slotButton)
 
         self.contentView.size_hint_y = None
-        self.contentView.height = len(slots)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
+        self.contentView.height = len(slots)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding    
 
-    def get_slot_at_index(self, index):
-        return self.slotsData[index]
-
-    def select_slot(self, index):
-        selectedSlot = self.get_slot_at_index(index)
+    def select_slot(self, slot_uuid):        
+        selectedSlot = self.slotsData[slot_uuid]
 
         modalview = ModalView(size_hint=(None,None), width=600, height=400)
         # view = ModalView(auto_dismiss=False)
@@ -198,7 +195,7 @@ class SlotsWidget(ColorBoxLayout):
         cancelButton = Button(text='Cancel', size_hint=(None, None), width=300, height=80)
         cancelButton.on_press = self.close_modal
         confirmButton = Button(text='Confirm', size_hint=(None, None), width=300, height=80)
-        confirmButton.on_press = partial(self.confirm_slot, selectedSlot)            
+        confirmButton.on_press = partial(self.confirm_slot, slot_uuid)            
         buttonRow.add_widget(cancelButton)     
         buttonRow.add_widget(confirmButton)
 
@@ -249,8 +246,9 @@ class SlotsWidget(ColorBoxLayout):
     def close_modal(self):
         self.modalview.dismiss()
     
-    def confirm_slot(self, slot):
-        self.confirm_slot_callback(slot)
+    #calls a function in ProfessorScreen class, that accesses DBManager to confirm the slot
+    def confirm_slot(self, slot_uuid):
+        self.confirm_slot_callback(slot_uuid)
         self.close_modal()    
 
     def logout(self):
