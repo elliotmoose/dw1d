@@ -92,8 +92,8 @@ class DBManager:
         current = self.db.child('current').get().val()
         if current != None:            
             full_db = self.db.get().val()
-            self.full_data = full_db
             structured_data = self.structure_data(full_db, current)
+            self.full_data = full_db
             self.login(structured_data)
             return
 
@@ -120,10 +120,10 @@ class DBManager:
                         
                         
                         #step 3: for each professor, get the slots that belong to that professor
-                        slots = {}                     
+                        slots = []                
                         for slot in full_data['slots'].values():
                             if slot['prof_id'] == prof['id']:
-                                slots[slot['id']] = copy.deepcopy(slot)                        
+                                slots.append(copy.deepcopy(slot)) 
 
                         profdata = copy.deepcopy(prof)
                         profdata['slots'] = slots
@@ -139,15 +139,11 @@ class DBManager:
         return output
 
     def confirm_slot(self, slot_uuid):
-        print('Confirming Slot...')
-        # allslots = self.db.child('slots').get().val()
-        # student = self.db.child('current').get().val()
-
+        print('Confirming Slot...')    
         allslots = self.full_data['slots']
-        student = self.full_data['current']
-        allstudents = self.full_data['students']
+        student = self.full_data['current']        
         student_id = student['id']
-        # student_index = 
+        
         price = 50
         newcredits = student['credits'] - price        
         
@@ -157,7 +153,9 @@ class DBManager:
         self.db.update({
             'slots/{0}/student_id'.format(slot_uuid): student_id,
             'students/{0}/credits'.format(student_id) : newcredits
-            })
+        })
+
+        
                 
                 
 

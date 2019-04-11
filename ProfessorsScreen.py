@@ -165,19 +165,20 @@ class SlotsWidget(ColorBoxLayout):
         
         self.contentView.clear_widgets()
         buttonHeight = 120                                   
-        for slot in slots.values():
+        for i in range(len(slots)):
+            slot = slots[i]
             slotButton = Button(background_normal='',color=profButtonTextColor, font_size=40)            
             slotButton.size_hint_y = None 
             slotButton.height = buttonHeight
             slotButton.text = slot['time']
-            slotButton.on_press=partial(self.select_slot, slot['id'])            
+            slotButton.on_press=partial(self.select_slot, i)            
             self.contentView.add_widget(slotButton)
 
         self.contentView.size_hint_y = None
         self.contentView.height = len(slots)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding    
 
-    def select_slot(self, slot_uuid):        
-        selectedSlot = self.slotsData[slot_uuid]
+    def select_slot(self, index):        
+        selectedSlot = self.slotsData[index]
 
         modalview = ModalView(size_hint=(None,None), width=600, height=400)
         # view = ModalView(auto_dismiss=False)
@@ -195,7 +196,7 @@ class SlotsWidget(ColorBoxLayout):
         cancelButton = Button(text='Cancel', size_hint=(None, None), width=300, height=80)
         cancelButton.on_press = self.close_modal
         confirmButton = Button(text='Confirm', size_hint=(None, None), width=300, height=80)
-        confirmButton.on_press = partial(self.confirm_slot, slot_uuid)            
+        confirmButton.on_press = partial(self.confirm_slot, selectedSlot['id'])            
         buttonRow.add_widget(cancelButton)     
         buttonRow.add_widget(confirmButton)
 
