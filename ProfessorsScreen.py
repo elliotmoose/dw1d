@@ -147,8 +147,9 @@ class ProfessorsScreen(Screen):
     def get_prof_at_index(self, index):
         return self.subjectData['professors'][index]
 
+    #returns the slot that was confirmed
     def confirm_slot(self, slot_uuid):        
-        self.parent.dbManager.confirm_slot(slot_uuid)
+        return self.parent.dbManager.confirm_slot(slot_uuid)
 
     def logout(self):
         self.parent.transition = SlideTransition(direction="right")
@@ -223,41 +224,51 @@ class SlotsWidget(ColorBoxLayout):
 
         headerLabel = Label(text='Booking Confirmed!', font_size=30, color=(0,0,0,1))        
 
+        slotidLabel = Label(text='Confirmation ID: \n {0}'.format(confirmed_slot['id']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
         dateLabel = Label(text='Date: {0}'.format(confirmed_slot['date']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
         timeLabel = Label(text='Time: {0}'.format(confirmed_slot['time']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
         costLabel = Label(text='Cost: {0} credits'.format(50),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
-        remaindingLabel = Label(text='Remainding Credits: {0}'.format(self.student_data['credits'] - 50),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
+        remainderLabel = Label(text='Credits Left: {0}'.format(self.student_data['credits'] - 50),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
 
         buttonRow = BoxLayout(orientation='horizontal')
         
         backButton = Button(text='Back', size_hint=(None, None), width=300, height=80)
-        backButton.on_press = self.close_modal
+        backButton.on_press = self.close_confirmation_modal
         logoutButton = Button(text='Logout', size_hint=(None, None), width=300, height=80)
-        logoutButton.on_press = partial(self.logout)            
+        logoutButton.on_press = partial(self.requestlogout)            
         buttonRow.add_widget(backButton)     
         buttonRow.add_widget(logoutButton)
 
-        container.add_widget(headerLabel)        
+        container.add_widget(headerLabel)          
+        container.add_widget(slotidLabel)        
         container.add_widget(dateLabel)        
         container.add_widget(timeLabel)        
-        container.add_widget(costLabel)        
-        container.add_widget(remaindingLabel)        
+        # container.add_widget(costLabel)        
+        container.add_widget(remainderLabel)        
         container.add_widget(buttonRow)
         confirmationmodalview.add_widget(container)        
         self.confirmationmodalview = confirmationmodalview
+        self.confirmationmodalview.open()
 
     def open_modal(self):        
         self.modalview.open()
         
     def close_modal(self):
         self.modalview.dismiss()
+
+    def close_confirmation_modal(self):
+        self.confirmationmodalview.dismiss()
+
     
     #calls a function in ProfessorScreen class, that accesses DBManager to confirm the slot
     def confirm_slot(self, slot_uuid):
-        self.confirm_slot_callback(slot_uuid)
+        confirmedBooking = self.confirm_slot_callback(slot_uuid)
         self.close_modal()    
+        print('confirmed: ', confirmedBooking['id'])
+        self.on_confirmed_booking(confirmedBooking)        
 
-    def logout(self):
+    def requestlogout(self):
+        self.close_confirmation_modal()
         self.logout()
 
 

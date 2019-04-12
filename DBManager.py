@@ -138,6 +138,7 @@ class DBManager:
 
         return output
 
+    #returns the slot that was confirmed
     def confirm_slot(self, slot_uuid):
         print('Confirming Slot...')    
         allslots = self.full_data['slots']
@@ -154,6 +155,8 @@ class DBManager:
             'slots/{0}/student_id'.format(slot_uuid): student_id,
             'students/{0}/credits'.format(student_id) : newcredits
         })
+
+        return self.db.child('slots/{0}'.format(slot_uuid)).get().val()
 
         
                 
