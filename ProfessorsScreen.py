@@ -166,13 +166,17 @@ class SlotsWidget(ColorBoxLayout):
         self.student_data = {}
                 
 
-    def set_slots(self, slots):        
-        self.slotsData = slots
-        
+    def set_slots(self, slots):                        
         self.contentView.clear_widgets()
-        buttonHeight = 120                                   
-        for i in range(len(slots)):
+        buttonHeight = 120          
+        filtered_slots = []                         
+        for i in range(len(slots)):            
             slot = slots[i]
+            
+            #check if the slot is already booked
+            if slot['student_id'] != 'null':
+                continue
+
             slotButton = Button(background_normal='',color=profButtonTextColor, font_size=40)            
             slotButton.size_hint_y = None 
             slotButton.height = buttonHeight
@@ -180,8 +184,12 @@ class SlotsWidget(ColorBoxLayout):
             slotButton.on_press=partial(self.select_slot, i)            
             self.contentView.add_widget(slotButton)
 
+            filtered_slots.append(slot)
+
+
+        self.slotsData = filtered_slots        
         self.contentView.size_hint_y = None
-        self.contentView.height = len(slots)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding    
+        self.contentView.height = len(filtered_slots)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding    
 
     def select_slot(self, index):        
         selectedSlot = self.slotsData[index]
@@ -224,7 +232,7 @@ class SlotsWidget(ColorBoxLayout):
 
         headerLabel = Label(text='Booking Confirmed!', font_size=30, color=(0,0,0,1))        
 
-        slotidLabel = Label(text='Confirmation ID: \n {0}'.format(confirmed_slot['id']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
+        slotidLabel = Label(text='Confirmation ID: \n {0}'.format(confirmed_slot['id']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60, halign='center')
         dateLabel = Label(text='Date: {0}'.format(confirmed_slot['date']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
         timeLabel = Label(text='Time: {0}'.format(confirmed_slot['time']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
         costLabel = Label(text='Cost: {0} credits'.format(50),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)

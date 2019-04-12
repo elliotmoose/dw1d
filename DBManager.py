@@ -58,7 +58,8 @@ class DBManager:
 
     #For testing purposes, this function lets you simulate the tapping of a card and login
     def FirebaseForceLogin(self):
-        self.db.update({'current': TemplateData.loggedindbtemplate['current']})
+        current = self.db.child('students/{0}'.format('1003501')).get().val()
+        self.db.update({'current': current})
 
     def login(self, structured_data):
         self.loggedIn = True
