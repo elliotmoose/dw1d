@@ -25,6 +25,9 @@ class ProfessorsScreen(Screen):
     
         #this data should be a subject        
         self.selectedSubjectID = None
+
+        #this data should be an int
+        self.selectedProfIndex = None
         
         boxLayout = ColorBoxLayout(orientation='vertical', color=Color(162/255, 162/255, 165/255,1))
         
@@ -107,6 +110,7 @@ class ProfessorsScreen(Screen):
     def on_leave(self, *args):
         #reset all views
         self.selectedSubjectID = None
+        self.selectedProfIndex = None
         self.update()
         self.slotsView.set_slots({}) 
         self.profDetailsView.reset_prof_data()     
@@ -118,7 +122,7 @@ class ProfessorsScreen(Screen):
             self.subjectLabel.text = '{0} {1}'.format(subject['id'], subject['name'])
 
         student_data = self.get_student_data()
-        print(student_data)
+
         if student_data:
             self.studentDetailsWidget.set_student_data(student_data)     
             self.slotsView.student_data = student_data   
@@ -135,6 +139,11 @@ class ProfessorsScreen(Screen):
             self.contentView.add_widget(profButton)
             self.profButtons.append(profButton)
 
+        
+        #if there is already a prof selected, reselect it to update user interface
+        if self.selectedProfIndex != None:
+            self.select_prof(self.selectedProfIndex)
+
         self.contentView.size_hint_y = None
         self.contentView.height = len(self.get_profs())*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
         
@@ -142,14 +151,21 @@ class ProfessorsScreen(Screen):
         self.parent.transition = SlideTransition(direction="right")
         self.parent.current = 'SUBJECTS_SCREEN'
 
-    def select_prof(self, index):    
+    def select_prof(self, index):  
         self.reset_button_colors()    
-        self.profButtons[index].background_color = (142/255, 229/255, 179/255,1)
-        self.profButtons[index].color = profButtonColor
+        
+        #if attempted to select a prof that is out of range, deselect all
+        if index >= len(self.get_profs()):
+            self.selectedProfIndex = None            
+            self.slotsView.set_slots({})
+            self.profDetailsView.reset_prof_data()
+        else:
+            self.selectedProfIndex = index
+            self.profButtons[index].background_color = (142/255, 229/255, 179/255,1)
+            self.profButtons[index].color = profButtonColor
 
-        self.slotsView.set_slots(self.get_prof_at_index(index)['slots'])
-
-        self.profDetailsView.set_prof_data(self.get_prof_at_index(index))
+            self.slotsView.set_slots(self.get_prof_at_index(index)['slots'])
+            self.profDetailsView.set_prof_data(self.get_prof_at_index(index))
 
     
     def reset_button_colors(self):
@@ -208,7 +224,6 @@ class SlotsWidget(ColorBoxLayout):
             self.contentView.add_widget(slotButton)
 
             filtered_slots.append(slot)
-
 
         self.slotsData = filtered_slots        
         self.contentView.size_hint_y = None
