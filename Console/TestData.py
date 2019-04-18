@@ -38,7 +38,7 @@ subject_2 = {
 }
 
 data = {
-    'subjects' : [subject_1, subject_2],
+    'modules' : [subject_1, subject_2],
     'student' : {
         'name' : 'Elliot',
         'class' : 'F04',

@@ -40,7 +40,6 @@ class DBManager:
         self.cleanup = True
 
     def InitalizeFirebase(self):
-
         confirmed = input('Warning: Initializing removes all current data. Continue? y/n\n')
         
         if confirmed != 'y':
@@ -81,8 +80,7 @@ class DBManager:
         t.start()        
  
     #this is an internal function because it has to be run with a timer (so that it is multithreaded)
-    def _beginCheckLoginCycle(self):
-        
+    def _beginCheckLoginCycle(self):        
         #if it is logged in, no more need to check
         if self.loggedIn or self.cleanup == True:
             return
@@ -102,9 +100,21 @@ class DBManager:
         time.sleep(1/REFRESH_RATE)
         self.beginCheckLoginCycle()
 
+    #retrieves all data again, structures it, then returns it
+    def reloadStructuredData(self):
+        print('Reloading all data...')
+        current = self.db.child('current').get().val()
+        if current != None:            
+            full_db = self.db.get().val()
+            structured_data = self.structure_data(full_db, current)
+            self.full_data = full_db
+            return full_db
+        else:
+            print('ERROR: NO CURRENT USER')
+            return None
+
     #takes in the full database and structures the data accordingly, making the links between the separate tables
-    def structure_data(self, full_data, current_data):            
-        
+    def structure_data(self, full_data, current_data):                    
         #make a replica of the student details as a starting point
         current_student = copy.deepcopy(current_data)
         output = {}
@@ -158,6 +168,9 @@ class DBManager:
         })
 
         return self.db.child('slots/{0}'.format(slot_uuid)).get().val()
+
+    def get_student(self):
+        return self.structure_data['current']
 
         
                 

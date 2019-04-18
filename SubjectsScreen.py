@@ -75,6 +75,5 @@ class SubjectsScreen(Screen):
     def select_subject(self, index):
         self.parent.transition = SlideTransition(direction="left")
         self.parent.current = 'PROFESSORS_SCREEN'
-        self.parent.professorsScreen.set_student_data(self.data['current'])
-        self.parent.professorsScreen.set_subject_data(self.data['modules'][index])
+        self.parent.professorsScreen.select_subject(index)        
 

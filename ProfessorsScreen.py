@@ -23,11 +23,8 @@ class ProfessorsScreen(Screen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
     
-        #this data should be a subject
-        self.subjectData = {
-            'name': 'No subject selected',
-            'professors' : []            
-        }
+        #this data should be a subject        
+        self.selectedSubjectID = None
         
         boxLayout = ColorBoxLayout(orientation='vertical', color=Color(162/255, 162/255, 165/255,1))
         
@@ -80,32 +77,50 @@ class ProfessorsScreen(Screen):
         self.studentDetailsWidget = StudentDetailsWidget(size_hint_y=None, height=200)
         self.add_widget(self.studentDetailsWidget) 
 
-    def set_subject_data(self, subject):
-        self.subjectData = subject
-        self.subjectLabel.text = '{0} {1}'.format(subject['id'], subject['name'])
+    def get_subject_data(self):                        
+        if self.selectedSubjectID != None:
+            subject = self.parent.dbManager.structured_data['modules'][self.selectedSubjectID]
+            return subject
+
+    def select_subject(self, subjectID):
+        self.selectedSubjectID = subjectID                
         self.update()
+
+    def get_student_data(self):
+        if self.parent:
+            return self.parent.dbManager.structured_data['current']
 
     def set_student_data(self, student_data):
         self.student_data = student_data
         self.studentDetailsWidget.set_student_data(student_data)     
         self.slotsView.student_data = student_data   
 
+    #this should be run after confirming a booking in order to update all information displayed
+    def reloadData(self):
+        newStructuredData = self.parent.dbManager.reloadStructuredData()        
+        self.update()
+
     def on_pre_enter(self, *args):                
         self.update()
 
     def on_leave(self, *args):
         #reset all views
-        self.subjectData = {
-            'name': 'No subject selected',
-            'professors' : []            
-        }
-
+        self.selectedSubjectID = None
         self.update()
         self.slotsView.set_slots({}) 
         self.profDetailsView.reset_prof_data()     
 
 
     def update(self):
+        if self.selectedSubjectID != None:            
+            subject = self.get_subject_data()
+            self.subjectLabel.text = '{0} {1}'.format(subject['id'], subject['name'])
+
+        student_data = self.get_student_data()
+        if student_data:
+            self.studentDetailsWidget.set_student_data(student_data)     
+            self.slotsView.student_data = student_data   
+
         self.contentView.clear_widgets()  
         self.profButtons = []      
         buttonHeight = 200        
@@ -119,7 +134,7 @@ class ProfessorsScreen(Screen):
             self.profButtons.append(profButton)
 
         self.contentView.size_hint_y = None
-        self.contentView.height = len(self.subjectData['professors'])*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
+        self.contentView.height = len(self.get_profs())*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding
         
     def back(self):
         self.parent.transition = SlideTransition(direction="right")
@@ -142,14 +157,18 @@ class ProfessorsScreen(Screen):
             button.background_normal=''
 
     def get_profs(self):
-        return self.subjectData['professors']
+        subjectData = self.get_subject_data()
+        return subjectData['professors'] if subjectData != None else []
 
     def get_prof_at_index(self, index):
-        return self.subjectData['professors'][index]
+        subjectData = self.get_subject_data()        
+        return subjectData['professors'][index] if subjectData != None else []
 
     #returns the slot that was confirmed
     def confirm_slot(self, slot_uuid):        
-        return self.parent.dbManager.confirm_slot(slot_uuid)
+        confirmed_slot = self.parent.dbManager.confirm_slot(slot_uuid)
+        self.reloadData()
+        return confirmed_slot
 
     def logout(self):
         self.parent.transition = SlideTransition(direction="right")
@@ -181,7 +200,7 @@ class SlotsWidget(ColorBoxLayout):
             slotButton.size_hint_y = None 
             slotButton.height = buttonHeight
             slotButton.text = slot['time']
-            slotButton.on_press=partial(self.select_slot, i)            
+            slotButton.on_press=partial(self.select_slot, len(filtered_slots))            
             self.contentView.add_widget(slotButton)
 
             filtered_slots.append(slot)
@@ -191,7 +210,7 @@ class SlotsWidget(ColorBoxLayout):
         self.contentView.size_hint_y = None
         self.contentView.height = len(filtered_slots)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding    
 
-    def select_slot(self, index):        
+    def select_slot(self, index):            
         selectedSlot = self.slotsData[index]
 
         modalview = ModalView(size_hint=(None,None), width=600, height=400)
