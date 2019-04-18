@@ -97,7 +97,8 @@ class ProfessorsScreen(Screen):
 
     #this should be run after confirming a booking in order to update all information displayed
     def reloadData(self):
-        newStructuredData = self.parent.dbManager.reloadStructuredData()        
+        newStructuredData = self.parent.dbManager.reloadStructuredData()                
+        print(newStructuredData["current"]["credits"])
         self.update()
 
     def on_pre_enter(self, *args):                
@@ -117,6 +118,7 @@ class ProfessorsScreen(Screen):
             self.subjectLabel.text = '{0} {1}'.format(subject['id'], subject['name'])
 
         student_data = self.get_student_data()
+        print(student_data)
         if student_data:
             self.studentDetailsWidget.set_student_data(student_data)     
             self.slotsView.student_data = student_data   
@@ -167,7 +169,9 @@ class ProfessorsScreen(Screen):
     #returns the slot that was confirmed
     def confirm_slot(self, slot_uuid):        
         confirmed_slot = self.parent.dbManager.confirm_slot(slot_uuid)
-        self.reloadData()
+
+        #after confirming a slot, reload the data to update student and slots data 
+        self.reloadData()        
         return confirmed_slot
 
     def logout(self):
@@ -255,7 +259,7 @@ class SlotsWidget(ColorBoxLayout):
         dateLabel = Label(text='Date: {0}'.format(confirmed_slot['date']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
         timeLabel = Label(text='Time: {0}'.format(confirmed_slot['time']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
         costLabel = Label(text='Cost: {0} credits'.format(50),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
-        remainderLabel = Label(text='Credits Left: {0}'.format(self.student_data['credits'] - 50),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
+        remainderLabel = Label(text='Credits Left: {0}'.format(self.student_data['credits']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60)
 
         buttonRow = BoxLayout(orientation='horizontal')
         

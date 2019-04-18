@@ -102,13 +102,15 @@ class DBManager:
 
     #retrieves all data again, structures it, then returns it
     def reloadStructuredData(self):
+        
         print('Reloading all data...')
         current = self.db.child('current').get().val()
+
         if current != None:            
             full_db = self.db.get().val()
-            structured_data = self.structure_data(full_db, current)
-            self.full_data = full_db
-            return full_db
+            self.structured_data = self.structure_data(full_db, current)
+            self.full_data = full_db                        
+            return self.structured_data
         else:
             print('ERROR: NO CURRENT USER')
             return None
@@ -149,6 +151,7 @@ class DBManager:
 
         return output
 
+    #confirm the slot by updating firebase and allocating the currently logged in student's id as the student of the slot
     #returns the slot that was confirmed
     def confirm_slot(self, slot_uuid):
         print('Confirming Slot...')    
@@ -161,11 +164,12 @@ class DBManager:
         
         print('new credits: ', newcredits)    
 
-        #update database with student_id, signifying the slot has been booked
+        #update database with student_id, signifying the slot has been booked, and allocating the new credits amount
         self.db.update({
             'slots/{0}/student_id'.format(slot_uuid): student_id,
-            'students/{0}/credits'.format(student_id) : newcredits
-        })
+            'students/{0}/credits'.format(student_id) : newcredits,
+            'current/credits' : newcredits
+        })        
 
         return self.db.child('slots/{0}'.format(slot_uuid)).get().val()
 
