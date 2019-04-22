@@ -70,6 +70,8 @@ def getButtons(weeklist):
             slots['time'] = '{}:{}'.format(hour, minutes)
             slots['date'] = weeklist[i]
             slots['id'] = str(uuid.uuid4())
+            slots['profid'] = 0
+            slots['studentid'] = ''
             days.append(slots)
         output.append(days)
         

@@ -111,7 +111,7 @@ class getWeek(Screen):
             for j in range(5):
                 if(self.btn[j][i].state == 'down'):
                     self.confirmedslots.append(self.dictionary[j][i])
-                    #db.child('slots').update({self.dictionary[j][i]['id']: self.dictionary[j][i]})
+                    db.child('slots').update({self.dictionary[j][i]['id']: self.dictionary[j][i]})
                     print(self.dictionary[j][i])
 
 
