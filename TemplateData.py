@@ -9,13 +9,15 @@ def slot(time, date, prof_id):
         'id': newuuid()
     }
 
-def prof(name,id, contact, email, modules):
+def prof(name,id, contact, email, modules, username, password):
     return {
         'name' : name,
         'id': id,
         'contact': contact,
         'email': email,
-        'modules' : modules
+        'modules' : modules,
+        'username': username,
+        'password': password
     }
 
 def student(name, id, student_class, can_number, contact, email,  modules):
@@ -38,14 +40,14 @@ def module(name, id):
 
 def newuuid():
     return str(uuid.uuid4())
-slot1 = slot('0800', '24/08/19', 0)
-slot2 = slot('1000', '25/08/19', 0)
-slot3 = slot('1200', '26/08/19', 1)
-slot4 = slot('1400', '27/08/19', 1)
+slot1 = slot('0800', '24/04/19', 0)
+slot2 = slot('1000', '25/04/19', 0)
+slot3 = slot('1200', '26/04/19', 1)
+slot4 = slot('1400', '27/04/19', 1)
 
-meixuan = prof('Mei Xuan', 0, '91111000', 'meixuan@sutd.edu.sg',['10.008', '10.011'])
-chunkiat = prof('Chun Kiat',1, '91111999', 'chunkiat@sutd.edu.sg',['10.007'])
-okakurniawan = prof('Oka Kurniawan',2, '90000999', 'okakurniawan@sutd.edu.sg',['10.009'])
+meixuan = prof('Mei Xuan', 0, '91111000', 'meixuan@sutd.edu.sg',['10.008', '10.011'], 'meixuan','12345')
+chunkiat = prof('Chun Kiat',1, '91111999', 'chunkiat@sutd.edu.sg',['10.007'], 'chunkiat','12345')
+okakurniawan = prof('Oka Kurniawan',2, '90000999', 'okakurniawan@sutd.edu.sg',['10.009'], 'okakurniawan','12345')
 
 elliot = student('Elliot Koh', '1003501', 'F04', '974498831285', '91000092', 'elliot@sutd.edu.sg',['10.007', '10.009', '10.008', '10.011'])
 sid = student('Sidharth', '1002345', 'F04', '372390003533', '91123123', 'sidharth@sutd.edu.sg',['10.007', '10.008', '10.011'])

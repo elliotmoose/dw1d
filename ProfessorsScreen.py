@@ -240,11 +240,15 @@ class SlotsWidget(ColorBoxLayout):
         self.slotsData = filtered_slots        
         cat_slots = self.categorize_slots(filtered_slots) #categorizes it by date into a dictionary
         
+        
+
         for date in cat_slots.keys():
             slotlist = cat_slots[date]
 
             day_container = BoxLayout(orientation='vertical')
-            day_header = Label(text=date, size_hint_y=None, height=headerHeight)
+            day_header = Label(text=date, size_hint_y=None, height=headerHeight, halign="left")
+            # day_header = Label(text='No subject selected', color=(0,0,0,1), size_hint_y=None, height=40, pos_hint={'x': 0}, pos=(20, 100))
+            day_header.bind(size=day_header.subjectLabel.setter('text_size'))
             day_slot_container = BoxLayout(orientation='horizontal')
 
             day_container.add_widget(day_header)
