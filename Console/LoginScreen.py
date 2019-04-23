@@ -31,16 +31,16 @@ class LoginScreen(Screen):
         self.add_widget(container)
 
         #test
-        usernameInput.text = 'elliot'
+        usernameInput.text = 'meixuan'
         passwordInput.text = '12345'            
 
     def login(self):
         username = self.usernameInput.text
         password = self.passwordInput.text        
-        success, data = self.parent.dbManager.login(username, password)        
+        success = self.parent.dbManager.login(username, password)        
 
         if success:
-            self.parent.timetableScreen.set_data(data)        
+            #self.parent.timetableScreen.set_data(data)        
             self.parent.transition = SlideTransition(direction="left")
             self.parent.current = "TIMETABLE_SCREEN"                
         else:

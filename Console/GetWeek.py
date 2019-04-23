@@ -27,28 +27,33 @@ def getWeek(offset):
 
 #functions to generate each day    
 def mon(a):
-    monday = today + rdelta.relativedelta(weekday=rdelta.MO(a))
-    return monday
+    monday = str(today + rdelta.relativedelta(weekday=rdelta.MO(a)))
+    output = monday[8:10]+'/'+monday[5:7]+'/'+monday[2:4]
+    return output
 
 def tue(a):
-    tuesday = today + rdelta.relativedelta(weekday=rdelta.TU(a)) 
-    return tuesday
+    tuesday = str(today + rdelta.relativedelta(weekday=rdelta.TU(a)))
+    output = tuesday[8:10]+'/'+tuesday[5:7]+'/'+tuesday[2:4]
+    return output
 
 def wed(a):
-    wednesday = today + rdelta.relativedelta(weekday=rdelta.WE(a))
-    return wednesday
+    wednesday = str(today + rdelta.relativedelta(weekday=rdelta.WE(a)))
+    output = wednesday[8:10]+'/'+wednesday[5:7]+'/'+wednesday[2:4]
+    return output
    
 def thu(a):
-    thursday = today + rdelta.relativedelta(weekday=rdelta.TH(a))
-    return thursday
+    thursday = str(today + rdelta.relativedelta(weekday=rdelta.TH(a)))
+    output = thursday[8:10]+'/'+thursday[5:7]+'/'+thursday[2:4]
+    return output
 
 def fri(a):
-    friday = today + rdelta.relativedelta(weekday=rdelta.FR(a))
-    return friday
+    friday = str(today + rdelta.relativedelta(weekday=rdelta.FR(a)))
+    output = friday[8:10]+'/'+friday[5:7]+'/'+friday[2:4]
+    return output
 
 #test getWeek function, just run
 a = (getWeek(offset))
-# print(a)
+print(a)
 
 #This function creates a list of lists which indexes correspond to the day
 #The nested lists contain 20 dictionaries of time slots from 08:00 to 18:00 in 30min intervals 
@@ -67,11 +72,11 @@ def getButtons(weeklist):
             hour = str(hours)
             if len(hour) == 1:
                 hour = '0' + hour
-            slots['time'] = '{}:{}'.format(hour, minutes)
+            slots['time'] = '{}{}'.format(hour, minutes)
             slots['date'] = weeklist[i]
-            slots['id'] = str(uuid.uuid4())
-            slots['profid'] = 0
-            slots['studentid'] = ''
+            #slots['id'] = slots['time'] + slots['date']
+            slots['prof_id'] = 0
+            slots['student_id'] = 'Null'
             days.append(slots)
         output.append(days)
         

@@ -35,7 +35,7 @@ class getWeek(Screen):
         self.Dayslayout = self.create_days(self.offset)
         self.Buttonlayout = self.create_buttons(self.offset)
         self.root = ScrollView()
-        self.confirmButton = Button(text = 'Confirm Booking', size_hint_y=None, height=80, on_press = lambda x:self.confirmSlots())
+        self.confirmButton = Button(text = 'Confirm Availability', size_hint_y=None, height=80, on_press = lambda x:self.confirmSlots())
         self.root.add_widget(self.Buttonlayout)
         self.Main.add_widget(self.Dayslayout)
         self.Main.add_widget(self.root)
@@ -71,12 +71,20 @@ class getWeek(Screen):
     def create_buttons(self, off):
         self.dictionary = GetWeek.getButtons(GetWeek.getWeek(off))
         ButtonLayout = GridLayout(cols=5, spacing=2, size_hint_y=None, height=21*80+22*2)
-        
+
+        slotlist = []
+        for item in list(db.child('slots').get().val()):
+            slotlist.append(db.child('slots').get().val()[item]['date']+db.child('slots').get().val()[item]['time'])
+
         for i in range(21):
             for j in range(5):
+                if self.dictionary[j][i]['date']+self.dictionary[j][i]['time'] in slotlist:
+                    buttonstate = 'down'
+                else:
+                    buttonstate = 'normal'
                 self.btn[j][i] = ToggleButton(text=str(self.dictionary[j][i]['time'])+'\n'+str(self.dictionary[j][i]['date']),
                     group = str(self.dictionary[j][i]), 
-                    state = 'normal', size_hint_y=None, 
+                    state = buttonstate, size_hint_y=None, 
                     height=80,text_size=(350,None),font_size='20sp', color = clr3, background_color = green)
                 ButtonLayout.add_widget(self.btn[j][i])
         
@@ -112,7 +120,7 @@ class getWeek(Screen):
                 if(self.btn[j][i].state == 'down'):
                     self.confirmedslots.append(self.dictionary[j][i])
                     db.child('slots').update({self.dictionary[j][i]['id']: self.dictionary[j][i]})
-                    print(self.dictionary[j][i])
+                    #print(self.dictionary[j][i])
 
 
 
@@ -126,3 +134,6 @@ class ScreenApp(App):
         return sm
 
 ScreenApp().run()
+
+
+
