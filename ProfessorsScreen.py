@@ -114,7 +114,7 @@ class ProfessorsScreen(Screen):
         self.selectedSubjectID = None
         self.selectedProfIndex = None
         self.update()
-        self.slotsView.set_slots({}) 
+        self.slotsView.set_slots([]) 
         self.profDetailsView.reset_prof_data()     
 
 
@@ -159,7 +159,7 @@ class ProfessorsScreen(Screen):
         #if attempted to select a prof that is out of range, deselect all
         if index >= len(self.get_profs()):
             self.selectedProfIndex = None            
-            self.slotsView.set_slots({})
+            self.slotsView.set_slots([])
             self.profDetailsView.reset_prof_data()
         else:
             self.selectedProfIndex = index
@@ -219,10 +219,10 @@ class SlotsWidget(ColorBoxLayout):
 
     def sort_filter_slots(self, input_slots):
         output = []
-
         slots = copy.copy(input_slots)
         slots.sort(key=lambda x: x['date'])
-        for slot in input_slots:
+        
+        for slot in slots:
             if slot['student_id'] != 'null':
                 continue
 
@@ -231,12 +231,12 @@ class SlotsWidget(ColorBoxLayout):
         return output
 
     def set_slots(self, slots):                        
-        headerHeight = 100
+        headerHeight = 60
         buttonHeight = 120       
 
         self.contentView.clear_widgets()
 
-        filtered_slots = self.sort_filter_slots(slots) #filters out slots that are not booked yet
+        filtered_slots = self.sort_filter_slots(slots) #filters out slots that are not booked yet        
         self.slotsData = filtered_slots        
         cat_slots = self.categorize_slots(filtered_slots) #categorizes it by date into a dictionary
         
@@ -246,9 +246,9 @@ class SlotsWidget(ColorBoxLayout):
             slotlist = cat_slots[date]
 
             day_container = BoxLayout(orientation='vertical')
-            day_header = Label(text=date, size_hint_y=None, height=headerHeight, halign="left")
+            day_header = Label(text=date, size_hint_y=None, height=headerHeight, halign="left", color=profButtonTextColor)
             # day_header = Label(text='No subject selected', color=(0,0,0,1), size_hint_y=None, height=40, pos_hint={'x': 0}, pos=(20, 100))
-            day_header.bind(size=day_header.subjectLabel.setter('text_size'))
+            day_header.bind(size=day_header.setter('text_size'))
             day_slot_container = BoxLayout(orientation='horizontal')
 
             day_container.add_widget(day_header)
