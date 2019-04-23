@@ -12,6 +12,8 @@ from kivy.graphics import Color, Rectangle
 from StudentDetailsWidget import StudentDetailsWidget
 from ColorBoxLayout import ColorBoxLayout
 
+import copy
+
 itemSpacing = 12
 contentPadding = 12
 
@@ -203,31 +205,64 @@ class SlotsWidget(ColorBoxLayout):
         self.scrollView.add_widget(self.contentView)
         self.add_widget(self.scrollView)
         self.student_data = {}
-                
 
-    def set_slots(self, slots):                        
-        self.contentView.clear_widgets()
-        buttonHeight = 120          
-        filtered_slots = []                         
-        for i in range(len(slots)):            
-            slot = slots[i]
-            
-            #check if the slot is already booked
+    def categorize_slots(self, slots):
+        output = {}                                
+
+        for slot in slots:
+            if slot['date'] in output.keys():
+                output[slot['date']].append(slot)
+            else:
+                output[slot['date']] = [slot]
+
+        return output     
+
+    def sort_filter_slots(self, input_slots):
+        output = []
+
+        slots = copy.copy(input_slots)
+        slots.sort(key=lambda x: x['date'])
+        for slot in input_slots:
             if slot['student_id'] != 'null':
                 continue
 
-            slotButton = Button(background_normal='',color=profButtonTextColor, font_size=40)            
-            slotButton.size_hint_y = None 
-            slotButton.height = buttonHeight
-            slotButton.text = slot['time']
-            slotButton.on_press=partial(self.select_slot, len(filtered_slots))            
-            self.contentView.add_widget(slotButton)
+            output.append(slot)
 
-            filtered_slots.append(slot)
+        return output
 
+    def set_slots(self, slots):                        
+        headerHeight = 100
+        buttonHeight = 120       
+
+        self.contentView.clear_widgets()
+
+        filtered_slots = self.sort_filter_slots(slots) #filters out slots that are not booked yet
         self.slotsData = filtered_slots        
+        cat_slots = self.categorize_slots(filtered_slots) #categorizes it by date into a dictionary
+        
+        for date in cat_slots.keys():
+            slotlist = cat_slots[date]
+
+            day_container = BoxLayout(orientation='vertical')
+            day_header = Label(text=date, size_hint_y=None, height=headerHeight)
+            day_slot_container = BoxLayout(orientation='horizontal')
+
+            day_container.add_widget(day_header)
+            day_container.add_widget(day_slot_container)
+
+            self.contentView.add_widget(day_container)
+               
+            for i in range(len(slotlist)):            
+                thisslot = slotlist[i]                                
+                slotButton = Button(background_normal='',color=profButtonTextColor, font_size=40)            
+                slotButton.size_hint_y = None 
+                slotButton.height = buttonHeight
+                slotButton.text = thisslot['time']
+                slotButton.on_press=partial(self.select_slot, filtered_slots.index(thisslot))           
+                day_slot_container.add_widget(slotButton)                
+                
         self.contentView.size_hint_y = None
-        self.contentView.height = len(filtered_slots)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding    
+        self.contentView.height = len(filtered_slots)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding + len(cat_slots.keys())*headerHeight
 
     def select_slot(self, index):            
         selectedSlot = self.slotsData[index]
