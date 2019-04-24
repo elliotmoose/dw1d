@@ -13,6 +13,7 @@ from StudentDetailsWidget import StudentDetailsWidget
 from ColorBoxLayout import ColorBoxLayout
 
 from functools import partial
+from DateHelper import DateStringToDay, DateStringToEpoch, DateTimeStringToEpoch
 
 import copy
 
@@ -232,7 +233,7 @@ class SlotsWidget(ColorBoxLayout):
     def sort_filter_slots(self, input_slots):
         output = []
         slots = copy.copy(input_slots)
-        slots.sort(key=lambda x: x['date']+x['time'])
+        slots.sort(key=lambda x: DateTimeStringToEpoch(x['date']+' '+x['time']))
         
         for slot in slots:
             if slot['student_id'] != 'null':
@@ -253,8 +254,10 @@ class SlotsWidget(ColorBoxLayout):
         for date in cat_slots.keys():
             slotlist = cat_slots[date]
 
+            date_header_text = '{} ({})'.format(date, DateStringToDay(date)) 
+
             day_height = len(slotlist)*buttonHeight + headerHeight            
-            day_header = Label(text=date, size_hint_y=None, height=headerHeight, halign="left", valign='center', color=profButtonTextColor)            
+            day_header = Label(text=date_header_text, size_hint_y=None, height=headerHeight, halign="left", valign='center', color=profButtonTextColor)            
             day_header.bind(size=day_header.setter('text_size'))            
             self.contentView.add_widget(day_header)
                

@@ -7,6 +7,8 @@ from ColorBoxLayout import ColorBoxLayout
 from NavigationBar import NavigationBar
 from kivy.graphics import Color
 
+from DateHelper import DateTimeStringToEpoch
+
 import copy
 
 textColor = (0.1,0.1,0.1,1)
@@ -47,7 +49,7 @@ class MySlotsWidget(ColorBoxLayout):
     def set_slots(self, input_slots):        
         
         slots = copy.copy(input_slots)
-        slots.sort(key=lambda x: x['date']+x['time'])
+        slots.sort(key=lambda x: DateTimeStringToEpoch(x['date']+' '+x['time']))
         
 
         self.slots_container.clear_widgets()
