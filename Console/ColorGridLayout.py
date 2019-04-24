@@ -1,7 +1,7 @@
 from kivy.uix.gridlayout import GridLayout
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Rectangle
-
+#creates a grid layout class that is able to change background color
 class ColorGridLayout(GridLayout):  
     def __init__(self, color=Color(142/255, 206/255, 229/255, 1),**kwargs):  
         self.bg = InstructionGroup()        

@@ -1,7 +1,7 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Rectangle
-
+#creates a box layout that is able to change background color
 class ColorBoxLayout(BoxLayout):  
     def __init__(self, color=Color(142/255, 206/255, 229/255, 1),**kwargs):  
         self.bg = InstructionGroup()        

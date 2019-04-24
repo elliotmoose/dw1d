@@ -6,12 +6,10 @@ i.e.
     a. subjects for student
     b. professors for that subject
     c. slots for that professor
-"""
-           
-import time
-from threading import Timer
+
+"""          
+
 from libdw import pyrebase
-import copy
 
 FIREBASE_ENDPOINT = 'https://basic-dc724.firebaseio.com/'
 REFRESH_RATE = 60
@@ -25,6 +23,7 @@ config = {
 
 class DBManager:        
     def __init__(self):
+        #creates attributes
         self.loggedIn = False
         self.data = {}
         
@@ -33,6 +32,7 @@ class DBManager:
         self.my_prof_slots=[] #list of slots for currently logged in professor
 
     def login(self, username, password):
+        #grabs the entire data base from firebase
         self.full_db = self.db.child('/').get().val()
         
         for prof in self.full_db['professors']:
@@ -59,7 +59,6 @@ class DBManager:
         self.my_prof_slots=[]
         for s in self.full_db["slots"].values():
             if self.my_prof['id']==s["prof_id"]:
-            #print(full_db["slots"])
                 self.my_prof_slots.append(s)
 
     
