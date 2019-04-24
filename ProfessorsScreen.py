@@ -17,6 +17,9 @@ import copy
 itemSpacing = 12
 contentPadding = 12
 
+studentDetailsHeight = 200
+navigationBarHeight = 140
+
 profButtonColor = (1,1,1,1)
 profButtonTextColor = (0.1,0.1,0.1,1)
 
@@ -33,10 +36,10 @@ class ProfessorsScreen(Screen):
         
         boxLayout = ColorBoxLayout(orientation='vertical', color=Color(162/255, 162/255, 165/255,1))
         
-        bodyContainer = BoxLayout(orientation='horizontal')                
+        self.bodyContainer = BoxLayout(orientation='horizontal')                
 
         #navigation bar ==
-        self.navigationBar = ColorBoxLayout(orientation='horizontal', size_hint_y=None, height=140)        
+        self.navigationBar = ColorBoxLayout(orientation='horizontal', size_hint_y=None, height=navigationBarHeight)        
         
         self.backButton = Button(size_hint=(None,1), width= 260, text='< Back', background_color=(0, 0, 0, 0))
         self.backButton.on_press = self.back
@@ -63,24 +66,25 @@ class ProfessorsScreen(Screen):
         self.profButtons = []
 
         #slots
-        self.slotsView = SlotsWidget(orientation='vertical', color=Color(228/255,228/255,228/255,1))        
+        slotsHeight=self.height-navigationBarHeight-studentDetailsHeight
+        self.slotsView = SlotsWidget(orientation='vertical', color=Color(228/255,228/255,228/255,1))
         self.slotsView.confirm_slot_callback = self.confirm_slot
-        self.slotsView.logout = self.logout
+        self.slotsView.logout = self.logout        
 
         #prof detail        
         self.profDetailsView = ProfDetailsWidget(orientation='vertical', color=Color(248/255,248/255,248/255,1))
 
-        bodyContainer.add_widget(self.scrollView) 
-        bodyContainer.add_widget(self.slotsView)
-        bodyContainer.add_widget(self.profDetailsView)
+        self.bodyContainer.add_widget(self.scrollView)         
+        self.bodyContainer.add_widget(self.slotsView)
+        self.bodyContainer.add_widget(self.profDetailsView)
 
         boxLayout.add_widget(self.navigationBar)
-        boxLayout.add_widget(bodyContainer)       
+        boxLayout.add_widget(self.bodyContainer)       
 
         self.add_widget(boxLayout)     
         
-        self.studentDetailsWidget = StudentDetailsWidget(size_hint_y=None, height=200)
-        self.add_widget(self.studentDetailsWidget) 
+        self.studentDetailsWidget = StudentDetailsWidget(size_hint_y=None, height=studentDetailsHeight)
+        boxLayout.add_widget(self.studentDetailsWidget)         
 
     def get_subject_data(self):                        
         if self.selectedSubjectID != None:
@@ -116,6 +120,10 @@ class ProfessorsScreen(Screen):
         self.update()
         self.slotsView.set_slots([]) 
         self.profDetailsView.reset_prof_data()     
+    
+    # def on_size(self, *args):
+    #     self.bodyContainer.height = self.height-navigationBarHeight-studentDetailsHeight
+    #     self.slotsView.height = self.height-navigationBarHeight-studentDetailsHeight        
 
 
     def update(self):
@@ -201,7 +209,7 @@ class SlotsWidget(ColorBoxLayout):
         super().__init__(*args, **kwargs)
         
         self.scrollView = ScrollView()
-        self.contentView = BoxLayout(orientation='vertical', padding=contentPadding, spacing=itemSpacing, pos_hint={'top': 1})    
+        self.contentView = BoxLayout(orientation='vertical', padding=contentPadding, spacing=itemSpacing)    #, pos_hint={'top': 1}
         self.scrollView.add_widget(self.contentView)
         self.add_widget(self.scrollView)
         self.student_data = {}
@@ -231,7 +239,7 @@ class SlotsWidget(ColorBoxLayout):
         return output
 
     def set_slots(self, slots):                        
-        headerHeight = 60
+        headerHeight = 40
         buttonHeight = 120       
 
         self.contentView.clear_widgets()
@@ -239,22 +247,14 @@ class SlotsWidget(ColorBoxLayout):
         filtered_slots = self.sort_filter_slots(slots) #filters out slots that are not booked yet        
         self.slotsData = filtered_slots        
         cat_slots = self.categorize_slots(filtered_slots) #categorizes it by date into a dictionary
-        
-        
-
+                
         for date in cat_slots.keys():
             slotlist = cat_slots[date]
 
-            day_container = BoxLayout(orientation='vertical')
-            day_header = Label(text=date, size_hint_y=None, height=headerHeight, halign="left", color=profButtonTextColor)
-            # day_header = Label(text='No subject selected', color=(0,0,0,1), size_hint_y=None, height=40, pos_hint={'x': 0}, pos=(20, 100))
-            day_header.bind(size=day_header.setter('text_size'))
-            day_slot_container = BoxLayout(orientation='horizontal')
-
-            day_container.add_widget(day_header)
-            day_container.add_widget(day_slot_container)
-
-            self.contentView.add_widget(day_container)
+            day_height = len(slotlist)*buttonHeight + headerHeight            
+            day_header = Label(text=date, size_hint_y=None, height=headerHeight, halign="left", valign='center', color=profButtonTextColor)            
+            day_header.bind(size=day_header.setter('text_size'))            
+            self.contentView.add_widget(day_header)
                
             for i in range(len(slotlist)):            
                 thisslot = slotlist[i]                                
@@ -263,10 +263,11 @@ class SlotsWidget(ColorBoxLayout):
                 slotButton.height = buttonHeight
                 slotButton.text = thisslot['time']
                 slotButton.on_press=partial(self.select_slot, filtered_slots.index(thisslot))           
-                day_slot_container.add_widget(slotButton)                
+                self.contentView.add_widget(slotButton)                
                 
-        self.contentView.size_hint_y = None
-        self.contentView.height = len(filtered_slots)*(buttonHeight + itemSpacing) - itemSpacing + 2*contentPadding + len(cat_slots.keys())*headerHeight
+        self.contentView.size_hint_y = None        
+        self.contentView.height = len(filtered_slots)*(buttonHeight + itemSpacing)+ 2*contentPadding + len(cat_slots.keys())*headerHeight        
+        
 
     def select_slot(self, index):            
         selectedSlot = self.slotsData[index]

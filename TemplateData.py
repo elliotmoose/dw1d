@@ -41,7 +41,11 @@ def module(name, id):
 def newuuid():
     return str(uuid.uuid4())
 slot1 = slot('0800', '24/04/19', 0)
-slot2 = slot('1000', '25/04/19', 0)
+slot12 = slot('1000', '24/04/19', 0)
+slot13 = slot('1100', '24/04/19', 0)
+slot14 = slot('1130', '24/04/19', 0)
+slot2 = slot('0800', '25/04/19', 0)
+slot21 = slot('1000', '24/04/19', 0)
 slot3 = slot('1200', '26/04/19', 1)
 slot4 = slot('1400', '27/04/19', 1)
 
@@ -72,7 +76,10 @@ dbtemplate['slots'] = {
     slot1['id'] : slot1, 
     slot2['id'] : slot2, 
     slot3['id'] : slot3, 
-    slot4['id'] : slot4, 
+    slot12['id'] : slot12, 
+    slot13['id'] : slot13, 
+    slot14['id'] : slot14, 
+    slot21['id'] : slot21,     
 }
 
 import copy
