@@ -1,0 +1,17 @@
+HOW TO RUN:
+
+The programme consists of two main.py files, one directly inside the folder and another one within the 'console' folder.
+The main.py outside the console represents the student's side of our booking system, while the main.py inside the console folder
+represents the professor's side of our booking system.
+
+FOR PROFESSOR SIDE:
+Run the 'main.py' file inside the console folder.
+
+FOR STUDENT'S SIDE:
+Run the 'main.py' file outside the console folder.
+
+
+
+
+
+
