@@ -7,14 +7,14 @@ from ColorBoxLayout import ColorBoxLayout
 from NavigationBar import NavigationBar
 from kivy.graphics import Color
 
+from DateHelper import DateTimeStringToEpoch, DateStringToDay, TodayEpoch
+
 import copy
 
-textColor = (0.1,0.1,0.1,1)
 class MySlotsWidget(ColorBoxLayout):
     def __init__(self, back_callback, **kwargs):
         super().__init__(**kwargs)
-        
-        # self.add_widget(NavigationBar('My Slots','', back_callback))        
+                
         self.container = ColorBoxLayout(orientation='vertical')
 
         #Bottom Navigation Bar
@@ -32,40 +32,51 @@ class MySlotsWidget(ColorBoxLayout):
 
         #Slots Display
         self.scrollview = ScrollView()
-        self.slots_container = ColorBoxLayout(orientation='vertical')
-
-
-
+        self.slots_container = ColorBoxLayout(orientation='vertical', size_hint_y=None)
         self.scrollview.add_widget(self.slots_container)                
         
-        self.container.add_widget(self.scrollview)
-        self.container.add_widget(Widget())
+        #Outermost layout        
+        self.container.add_widget(self.scrollview)        
         self.container.add_widget(self.bottomNavigationBar)
 
+        #Overall Container
         self.add_widget(self.container)
 
-    def set_slots(self, input_slots):        
-        
+    #This function is called everytime the user presses "My Slots" Button
+    def set_slots(self, input_slots):                
+        slot_height = 60
         slots = copy.copy(input_slots)
-        slots.sort(key=lambda x: x['date']+x['time'])
-        
+        slots.sort(key=lambda x: DateTimeStringToEpoch(x['date']+' '+x['time']))                
 
         self.slots_container.clear_widgets()
         
         for slot in slots:
-            slot_item = ColorBoxLayout(orientation='horizontal', size_hint_y=None, height=60, color=Color(1,1,1,1))
+            slot_bg_color = Color(1,1,1,1)
+            slot_text_color = (0.1,0.1,0.1,1)
 
-            timeLabel = Label(text=slot['time'],color=textColor, size_hint_x=None, width = 180)
-            dateLabel = Label(text=slot['date'],color=textColor, size_hint_x=None, width = 150)
-            profNameLabel = Label(text=slot['prof_details']['name'],color=textColor)
-            profEmailLabel = Label(text=slot['prof_details']['email'],color=textColor)
+            #check if slot is old -> change color accordingly
+            if DateTimeStringToEpoch(slot['date']+' '+slot['time']) < TodayEpoch():
+                slot_bg_color = Color(0.75,0.75,0.75,1)
+                slot_text_color = (0.5,0.5,0.5,1)
+
+            #Container for slot labels
+            slot_item = ColorBoxLayout(orientation='horizontal', size_hint_y=None, height=slot_height, color=slot_bg_color)
+
+            timeLabel = Label(text=slot['time'],color=slot_text_color, size_hint_x=None, width = 180)
+            dateLabel = Label(text='{} ({})'.format(slot['date'],DateStringToDay(slot['date'])),color=slot_text_color, size_hint_x=None, width = 300)
+            profNameLabel = Label(text=slot['prof_details']['name'],color=slot_text_color)
+            profContactLabel = Label(text=slot['prof_details']['contact'],color=slot_text_color, size_hint_x=None, width = 160)
+            profEmailLabel = Label(text=slot['prof_details']['email'],color=slot_text_color)
 
             slot_item.add_widget(timeLabel)
             slot_item.add_widget(dateLabel)
             slot_item.add_widget(profNameLabel)
+            slot_item.add_widget(profContactLabel)
             slot_item.add_widget(profEmailLabel)
 
             self.slots_container.add_widget(slot_item)
+
+        self.slots_container.height = slot_height * len(slots)
 
             
 
