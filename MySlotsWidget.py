@@ -58,11 +58,13 @@ class MySlotsWidget(ColorBoxLayout):
             timeLabel = Label(text=slot['time'],color=textColor, size_hint_x=None, width = 180)
             dateLabel = Label(text=slot['date'],color=textColor, size_hint_x=None, width = 150)
             profNameLabel = Label(text=slot['prof_details']['name'],color=textColor)
+            profContactLabel = Label(text=slot['prof_details']['contact'],color=textColor)
             profEmailLabel = Label(text=slot['prof_details']['email'],color=textColor)
 
             slot_item.add_widget(timeLabel)
             slot_item.add_widget(dateLabel)
             slot_item.add_widget(profNameLabel)
+            slot_item.add_widget(profContactLabel)
             slot_item.add_widget(profEmailLabel)
 
             self.slots_container.add_widget(slot_item)

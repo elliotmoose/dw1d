@@ -12,10 +12,16 @@ from kivy.graphics import Color, Rectangle
 from StudentDetailsWidget import StudentDetailsWidget
 from ColorBoxLayout import ColorBoxLayout
 
+from functools import partial
+
 import copy
 
+#CONSTANTS
 itemSpacing = 12
 contentPadding = 12
+
+headerHeight = 40 #date header
+buttonHeight = 120 #slot buttons       
 
 studentDetailsHeight = 200
 navigationBarHeight = 140
@@ -23,7 +29,6 @@ navigationBarHeight = 140
 profButtonColor = (1,1,1,1)
 profButtonTextColor = (0.1,0.1,0.1,1)
 
-from functools import partial
 class ProfessorsScreen(Screen):    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -57,7 +62,6 @@ class ProfessorsScreen(Screen):
         self.navigationBar.add_widget(Widget())
         self.navigationBar.add_widget(self.backButton)
         #end == 
-
 
         #profs
         self.scrollView = ScrollView()
@@ -239,8 +243,6 @@ class SlotsWidget(ColorBoxLayout):
         return output
 
     def set_slots(self, slots):                        
-        headerHeight = 40
-        buttonHeight = 120       
 
         self.contentView.clear_widgets()
 
@@ -266,7 +268,11 @@ class SlotsWidget(ColorBoxLayout):
                 self.contentView.add_widget(slotButton)                
                 
         self.contentView.size_hint_y = None        
-        self.contentView.height = len(filtered_slots)*(buttonHeight + itemSpacing)+ 2*contentPadding + len(cat_slots.keys())*headerHeight        
+
+        number_of_slots = len(filtered_slots)
+        number_of_headers = len(cat_slots.keys())
+
+        self.contentView.height = number_of_slots*(buttonHeight)+ 2*contentPadding + number_of_headers*headerHeight + (number_of_slots + number_of_headers-1) * itemSpacing   
         
 
     def select_slot(self, index):            

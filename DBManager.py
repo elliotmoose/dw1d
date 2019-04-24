@@ -185,7 +185,6 @@ class DBManager:
         
                 
                 
-
 import sys
 if __name__ == '__main__':
     db = DBManager()
@@ -194,3 +193,4 @@ if __name__ == '__main__':
         db.FirebaseForceLogin()
     else:    
         db.InitalizeFirebase()    
+
