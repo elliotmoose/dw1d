@@ -7,7 +7,7 @@ from ColorBoxLayout import ColorBoxLayout
 from NavigationBar import NavigationBar
 from kivy.graphics import Color
 
-from DateHelper import DateTimeStringToEpoch
+from DateHelper import DateTimeStringToEpoch, DateStringToDay
 
 import copy
 
@@ -58,9 +58,9 @@ class MySlotsWidget(ColorBoxLayout):
             slot_item = ColorBoxLayout(orientation='horizontal', size_hint_y=None, height=60, color=Color(1,1,1,1))
 
             timeLabel = Label(text=slot['time'],color=textColor, size_hint_x=None, width = 180)
-            dateLabel = Label(text=slot['date'],color=textColor, size_hint_x=None, width = 150)
+            dateLabel = Label(text='{} ({})'.format(slot['date'],DateStringToDay(slot['date'])),color=textColor, size_hint_x=None, width = 300)
             profNameLabel = Label(text=slot['prof_details']['name'],color=textColor)
-            profContactLabel = Label(text=slot['prof_details']['contact'],color=textColor)
+            profContactLabel = Label(text=slot['prof_details']['contact'],color=textColor, size_hint_x=None, width = 160)
             profEmailLabel = Label(text=slot['prof_details']['email'],color=textColor)
 
             slot_item.add_widget(timeLabel)

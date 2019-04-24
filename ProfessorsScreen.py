@@ -13,7 +13,7 @@ from StudentDetailsWidget import StudentDetailsWidget
 from ColorBoxLayout import ColorBoxLayout
 
 from functools import partial
-from DateHelper import DateStringToDay, DateStringToEpoch, DateTimeStringToEpoch
+from DateHelper import DateStringToDay, DateStringToEpoch, DateTimeStringToEpoch, TodayEpoch
 
 import copy
 
@@ -230,13 +230,17 @@ class SlotsWidget(ColorBoxLayout):
 
         return output     
 
+    #Sorts by datetime, filters only those not booked, and filters those that are only in the future
     def sort_filter_slots(self, input_slots):
         output = []
         slots = copy.copy(input_slots)
         slots.sort(key=lambda x: DateTimeStringToEpoch(x['date']+' '+x['time']))
         
         for slot in slots:
-            if slot['student_id'] != 'null':
+            if slot['student_id'] != 'null': #if booked, ignore
+                continue
+
+            if DateTimeStringToEpoch(slot['date']+' '+slot['time']) < TodayEpoch(): #if old, ignore
                 continue
 
             output.append(slot)

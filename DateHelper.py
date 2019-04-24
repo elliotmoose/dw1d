@@ -11,9 +11,13 @@ def DateTimeStringToEpoch(date_time_string):
 def DateStringToDay(date_string):
     return ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',][dateParser.parse(date_string,parserinfo(dayfirst=True)).weekday()]
 
+def TodayEpoch():
+    return datetime.now().timestamp()
+
+
+import time
 if __name__ == '__main__':    
-    d1 = DateStringToEpoch('02/04/19')    
-    d2 = DateTimeStringToEpoch('24/04/19 0800')    
-    print(d1)
+    
+    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(datetime.now().timestamp())))
 
     
