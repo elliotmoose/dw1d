@@ -46,14 +46,22 @@ def module(name, id):
 
 def newuuid():
     return str(uuid.uuid4())
-slot1 = slot('0800', '24/04/19', 2)
-slot12 = slot('1000', '24/04/19', 3)
-slot13 = slot('1100', '24/04/19', 3)
-slot14 = slot('1130', '24/04/19', 3)
-slot2 = slot('0800', '25/04/19', 3)
-slot21 = slot('1000', '25/04/19', 2)
-slot3 = slot('1200', '25/04/19', 2)
-slot4 = slot('1400', '25/04/19', 3)
+slot1 = slot('0800', '26/04/19', 2)
+slot2 = slot('1000', '26/04/19', 3)
+slot3 = slot('1100', '26/04/19', 3)
+slot4 = slot('1130', '26/04/19', 3)
+slot5 = slot('0800', '25/04/19', 3)
+slot6 = slot('1000', '25/04/19', 2)
+slot7 = slot('1200', '25/04/19', 2)
+slot8 = slot('1400', '25/04/19', 3)
+slot9 = slot('0800', '26/04/19', 2)
+slot10 = slot('1000', '26/04/19', 1)
+slot11 = slot('1100', '26/04/19', 0)
+slot12 = slot('1130', '26/04/19', 0)
+slot13 = slot('0800', '25/04/19', 0)
+slot14 = slot('1000', '25/04/19', 1)
+slot15 = slot('1200', '25/04/19', 1)
+slot16 = slot('1400', '25/04/19', 0)
 
 meixuan = prof('Mei Xuan', 0, '91111000', 'meixuan@sutd.edu.sg',['10.008', '10.011'], 'meixuan','12345')
 chunkiat = prof('Chun Kiat',1, '91111999', 'chunkiat@sutd.edu.sg',['10.007'], 'chunkiat','12345')
@@ -82,11 +90,19 @@ dbtemplate['modules'] = [biology, physics, modellingsystems, digitalworld]
 dbtemplate['slots'] = {
     slot1['id'] : slot1, 
     slot2['id'] : slot2, 
-    slot3['id'] : slot3, 
-    slot12['id'] : slot12, 
+    slot3['id'] : slot3,
+    slot4['id'] : slot4, 
+    slot5['id'] : slot5, 
+    slot6['id'] : slot6,
+    slot7['id'] : slot7, 
+    slot8['id'] : slot8, 
+    slot9['id'] : slot9,
+    slot10['id'] : slot10, 
+    slot11['id'] : slot11, 
+    slot12['id'] : slot12,
     slot13['id'] : slot13, 
     slot14['id'] : slot14, 
-    slot21['id'] : slot21,     
+    slot15['id'] : slot15,    
 }
 
 import copy
