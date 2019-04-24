@@ -1,13 +1,11 @@
 import dateutil.relativedelta as rdelta
 import datetime as DT
-import uuid
+
 #global today and day variables
 today = DT.date.today()  # today's date
 day = DT.datetime.today().weekday() #which day today is
 
-#variable offset (feel free to change)
-offset = 0
-
+#function gets the dates of the current week depending on offset. 0 being this week, 1 being next week, and so on...
 def getWeek(offset):
     #takes into account case of 1st page den following pages
     if offset == 0:
@@ -25,7 +23,7 @@ def getWeek(offset):
     
     return output
 
-#functions to generate each day    
+#functions to generate date of each day in the correct format (eg. 27/04/19)
 def mon(a):
     monday = str(today + rdelta.relativedelta(weekday=rdelta.MO(a)))
     output = monday[8:10]+'/'+monday[5:7]+'/'+monday[2:4]
@@ -51,14 +49,11 @@ def fri(a):
     output = friday[8:10]+'/'+friday[5:7]+'/'+friday[2:4]
     return output
 
-#test getWeek function, just run
-a = (getWeek(offset))
-#print(a)
-
 #This function creates a list of lists which indexes correspond to the day
-#The nested lists contain 20 dictionaries of time slots from 08:00 to 18:00 in 30min intervals 
-def getButtons(weeklist, profid):
-    output = []
+#The nested lists contain 21 dictionaries of time slots from 08:00 to 18:00 in 30min intervals 
+#profid is an input that will be parsed when called in TimetableScreen, it corresponds to the id of current professor that is logged in 
+def getSlots(weeklist, profid):
+    slotsls = []
     for i in range(5):
         hours = 7
         days = []
@@ -72,17 +67,17 @@ def getButtons(weeklist, profid):
             hour = str(hours)
             if len(hour) == 1:
                 hour = '0' + hour
-            slots['time'] = '{}{}'.format(hour, minutes)
-            slots['date'] = weeklist[i]
-            #slots['id'] = slots['time'] + slots['date']
-            slots['prof_id'] = profid
+            #creates the dictionary values for time in appropriate forms
+            slots['time'] = '{}{}'.format(hour, minutes) #eg. 0800
+            slots['date'] = weeklist[i] 
+            slots['prof_id'] = profid 
             slots['student_id'] = 'null'
             days.append(slots)
-        output.append(days)
+        slotsls.append(days)
         
-    return output
+    return slotsls
 
-#print(getButtons(a))
+
             
             
         
