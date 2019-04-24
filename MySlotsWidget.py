@@ -7,11 +7,11 @@ from ColorBoxLayout import ColorBoxLayout
 from NavigationBar import NavigationBar
 from kivy.graphics import Color
 
-from DateHelper import DateTimeStringToEpoch, DateStringToDay
+from DateHelper import DateTimeStringToEpoch, DateStringToDay, TodayEpoch
 
 import copy
 
-textColor = (0.1,0.1,0.1,1)
+
 class MySlotsWidget(ColorBoxLayout):
     def __init__(self, back_callback, **kwargs):
         super().__init__(**kwargs)
@@ -51,17 +51,24 @@ class MySlotsWidget(ColorBoxLayout):
         slots = copy.copy(input_slots)
         slots.sort(key=lambda x: DateTimeStringToEpoch(x['date']+' '+x['time']))
         
-
         self.slots_container.clear_widgets()
         
         for slot in slots:
-            slot_item = ColorBoxLayout(orientation='horizontal', size_hint_y=None, height=60, color=Color(1,1,1,1))
+            slot_bg_color = Color(1,1,1,1)
+            slot_text_color = (0.1,0.1,0.1,1)
 
-            timeLabel = Label(text=slot['time'],color=textColor, size_hint_x=None, width = 180)
-            dateLabel = Label(text='{} ({})'.format(slot['date'],DateStringToDay(slot['date'])),color=textColor, size_hint_x=None, width = 300)
-            profNameLabel = Label(text=slot['prof_details']['name'],color=textColor)
-            profContactLabel = Label(text=slot['prof_details']['contact'],color=textColor, size_hint_x=None, width = 160)
-            profEmailLabel = Label(text=slot['prof_details']['email'],color=textColor)
+            #check if slot is old
+            if DateTimeStringToEpoch(slot['date']+' '+slot['time']) < TodayEpoch():
+                slot_bg_color = Color(0.75,0.75,0.75,1)
+                slot_text_color = (0.5,0.5,0.5,1)
+
+            slot_item = ColorBoxLayout(orientation='horizontal', size_hint_y=None, height=60, color=slot_bg_color)
+
+            timeLabel = Label(text=slot['time'],color=slot_text_color, size_hint_x=None, width = 180)
+            dateLabel = Label(text='{} ({})'.format(slot['date'],DateStringToDay(slot['date'])),color=slot_text_color, size_hint_x=None, width = 300)
+            profNameLabel = Label(text=slot['prof_details']['name'],color=slot_text_color)
+            profContactLabel = Label(text=slot['prof_details']['contact'],color=slot_text_color, size_hint_x=None, width = 160)
+            profEmailLabel = Label(text=slot['prof_details']['email'],color=slot_text_color)
 
             slot_item.add_widget(timeLabel)
             slot_item.add_widget(dateLabel)
