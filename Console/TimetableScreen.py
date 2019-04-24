@@ -168,7 +168,6 @@ class TimetableScreen(Screen):
         popup.open()
     
     def refresh(self):  #to refresh the slots to check for updates in the slot bookings
-        print('reached refresh')
         self.parent.dbManager.reloadSlots()
         self.update()
         
