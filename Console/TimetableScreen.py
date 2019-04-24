@@ -167,7 +167,7 @@ class TimetableScreen(Screen):
             pass
         elif self.is_booked(i, j):
             print('popup triggered')
-            current = self.dictionary[j][i]
+            current = self.dictionary[j][i] #checks db for booked slots
             popup = Popup(title = 'Booking Details',
                           content = Label(text = 'Time: {}\nDate: {}\nStudent ID: {}'.format(current['time'], current['date'], current['student_id']), font_size = 20),
                           size_hint = (None, None),
