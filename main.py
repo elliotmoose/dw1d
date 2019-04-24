@@ -9,6 +9,7 @@ from kivy.uix.listview import ListItemButton
 from kivy.uix.widget import Widget
 from kivy.uix.button import Label, Button
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition, SlideTransition
+from kivy.clock import Clock
 
 from LoginScreen import LoginScreen
 from SubjectsScreen import SubjectsScreen
@@ -55,4 +56,15 @@ class Main(ScreenManager):
         self.current = "SUBJECTS_SCREEN"                
 
 
-BookingApp().run()
+
+
+import sys
+if __name__ == '__main__':
+    db = DBManager()
+    
+    if len(sys.argv) > 1 and sys.argv[1] == 'login':
+        print('LOGGIN IN')
+        Clock.schedule_once(lambda dt: db.FirebaseForceLogin(),0.4)        
+    BookingApp().run()
+
+
