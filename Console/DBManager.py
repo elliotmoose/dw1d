@@ -8,30 +8,9 @@ i.e.
     b. professors for that subject
     c. slots for that professor
 
-"""
-# import time
+"""          
 
-# class DBManager:        
-#     def __init__(self):
-#         self.loggedIn = False
-#         self.data = {}
-        
-#     def login(self, username, password):
-#         if username=='elliot' and password=='12345':
-#             return True, {'data': 'test data'}
-#         else:
-#             return False, None
-
-#     def logout(self):
-#         self.loggedIn = False
-#         self.data = {}    
-#         # self.beginCheckLoginCycle()  
-           
-import time
-from threading import Timer
 from libdw import pyrebase
-#import TemplateData
-import copy
 
 FIREBASE_ENDPOINT = 'https://basic-dc724.firebaseio.com/'
 REFRESH_RATE = 60 #firebase calls are still a bottleneck
@@ -45,25 +24,18 @@ config = {
 
 class DBManager:        
     def __init__(self):
+        #creates attributes
         self.loggedIn = False
         self.data = {}
-        
         firebase = pyrebase.initialize_app(config)
         self.db = firebase.database() 
-
         self.full_data = {}
-
         self.my_prof_slots=[]
 
-   
         
     def login(self, username, password):
+        #grabs the entire data base from firebase
         self.full_db = self.db.child('/').get().val()
-        
-        #username="John"#change accordingly
-        #password="password"#change accordingly
-        
-        #allslots = full_db['slots']
         self.my_prof_slots=[]
 
         for p in self.full_db['professors']:
@@ -72,28 +44,27 @@ class DBManager:
                 self.my_prof = p
                 for s in self.full_db["slots"].values():
                     if p['id']==s["prof_id"]:
-                    #print(full_db["slots"])
                         self.my_prof_slots.append(s)
                 return True
         return False
 
+    #adds new available slot that students are able to book
     def updateDBSlots(self, data):
         print(data)
         self.db.child('slots').update({data['id']: data})
         self.my_prof_slots.append(data)
 
-
+    #removes the slot from database if prof wants to state that he is no longer available during that time slot
     def removeDBSlots(self, data):
         self.db.child("slots").child(data['id']).remove()
         self.my_prof_slots.remove(data)
 
-
+    #update the my_prof_slots 
     def reloadSlots(self):
         self.full_db = self.db.child('/').get().val()
         self.my_prof_slots=[]
         for s in self.full_db["slots"].values():
             if self.my_prof['id']==s["prof_id"]:
-            #print(full_db["slots"])
                 self.my_prof_slots.append(s)
 
     
