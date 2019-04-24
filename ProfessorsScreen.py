@@ -207,6 +207,9 @@ class ProfessorsScreen(Screen):
     def confirm_slot(self, slot_uuid):        
         confirmed_slot = self.parent.dbManager.confirm_slot(slot_uuid)
 
+        if confirmed_slot == None:
+            return None        
+
         #after confirming a slot, reload the data to update student and slots data 
         self.reloadData()        
         return confirmed_slot
@@ -359,6 +362,32 @@ class SlotsWidget(ColorBoxLayout):
         self.confirmationmodalview = confirmationmodalview
         self.confirmationmodalview.open()
 
+    def on_failed_booking(self):
+        
+        confirmationmodalview = ModalView(size_hint=(None,None), width=600, height=400)
+        # view = ModalView(auto_dismiss=False)
+        container = ColorBoxLayout(orientation='vertical', color=Color(1,1,1,1))
+
+        headerLabel = Label(text='Booking Failed :(', font_size=30, color=(0,0,0,1))        
+
+        # slotidLabel = Label(text='Confirmation ID: \n {0}'.format(confirmed_slot['id']),font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60, halign='center')        
+        descriptionLabel = Label(text='You have insufficient credits!\nPlease contact your professor \nto allocate credits.',font_size=23, color=(0,0,0,1), size_hint=(1, None), height=60, halign='center')        
+        buttonRow = BoxLayout(orientation='horizontal')
+        
+        backButton = Button(text='Back', size_hint=(None, None), width=300, height=80)
+        backButton.on_press = self.close_confirmation_modal
+        logoutButton = Button(text='Logout', size_hint=(None, None), width=300, height=80)
+        logoutButton.on_press = partial(self.requestlogout)            
+        buttonRow.add_widget(backButton)     
+        buttonRow.add_widget(logoutButton)
+
+        container.add_widget(headerLabel)          
+        container.add_widget(descriptionLabel)   
+        container.add_widget(buttonRow)
+        confirmationmodalview.add_widget(container)        
+        self.confirmationmodalview = confirmationmodalview
+        self.confirmationmodalview.open()
+
     def open_modal(self):        
         self.modalview.open()
         
@@ -372,6 +401,13 @@ class SlotsWidget(ColorBoxLayout):
     #calls a function in ProfessorScreen class, that accesses DBManager to confirm the slot
     def confirm_slot(self, slot_uuid):
         confirmedBooking = self.confirm_slot_callback(slot_uuid)
+
+        #signifies that the booking has failed due to insufficient credits
+        if confirmedBooking == None:
+            self.on_failed_booking()
+            return
+
+
         self.close_modal()    
         print('confirmed: ', confirmedBooking['id'])
         self.on_confirmed_booking(confirmedBooking)        

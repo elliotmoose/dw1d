@@ -171,7 +171,10 @@ class DBManager:
         student_id = student['id']
         
         price = 50
-        newcredits = student['credits'] - price        
+        newcredits = student['credits'] - price     
+
+        if newcredits < 0:   
+            return None
         
         print('new credits: ', newcredits)    
 
