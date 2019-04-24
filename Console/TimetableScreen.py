@@ -10,7 +10,7 @@ from kivy.uix.label import Label
 from kivy.uix.togglebutton import ToggleButton
 from libdw import pyrebase
 from kivy.uix.button import ButtonBehavior
-
+import uuid
 from functools import partial
 
 config = {
@@ -100,10 +100,6 @@ class TimetableScreen(Screen):
         except:
             return False
 
-
-
-
-
     def create_buttons(self, off):
         self.dictionary = GetWeek.getButtons(GetWeek.getWeek(off))
         ButtonLayout = GridLayout(cols=5, spacing=2, size_hint_y=None, height=21*80+22*2)
@@ -154,12 +150,14 @@ class TimetableScreen(Screen):
         return DaysLayout
 
     def confirmSlots(self):
-        for i in range(21):
-            for j in range(5):
-                if(self.btn[j][i].background_color == GREEN):
-                    self.confirmedslots.append(self.dictionary[j][i])
-                    db.child('slots').update({self.dictionary[j][i]['id']: self.dictionary[j][i]})
-                    #print(self.dictionary[j][i])
+        self.parent.dbManager.updateDbSlots(self.tempAvailSlots)
+        # for i in range(21):
+        #     for j in range(5):
+        #         # append available selected slots to a temporary list and then push to db together
+        #         # if(self.btn[j][i].background_color == GREEN):
+        #         #     self.confirmedslots.append(self.dictionary[j][i])
+        #         #     db.child('slots').update({self.dictionary[j][i]['id']: self.dictionary[j][i]})
+        #             #print(self.dictionary[j][i])
 
     def select_slot(self, i, j, x):
         print('slot selected')
@@ -170,10 +168,13 @@ class TimetableScreen(Screen):
             #show modal with student info
             pass
         else:
-            #add
-            pass
-
+            print('reached here')
+            self.tempAvailSlots = []
+            self.tempAvailSlots.append(self.dictionary[j][i])
         self.update()
+
+    def createUUID(self, data):
+        
 
     
 

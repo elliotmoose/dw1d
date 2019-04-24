@@ -70,3 +70,8 @@ class DBManager:
                         self.my_prof_slots.append(s)
                 return True
         return False
+
+    def updateDbSlots(self, data):
+        print(data)
+        #self.db.child('slots').update(data)
+
