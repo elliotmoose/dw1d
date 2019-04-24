@@ -213,6 +213,7 @@ class TimetableScreen(Screen):
         self.popup = Popup(title='Menu',content=menu_layout, size_hint=(None,None), height=250, width=300)
         self.popup.open()
  
+    #shows the popup to allow for allocation of credits
     def show_allocate_credits(self, instance):
         self.popup.dismiss() #dismiss menu
 
@@ -229,6 +230,9 @@ class TimetableScreen(Screen):
         self.popup = Popup(title='Allocate Credits',content=allocate_layout, size_hint=(None,None), height=350, width=400)
         self.popup.open()
 
+    #This is called when confirm is pressed. This function have some safety nets:
+    # - Checks if amount is an integer
+    # - Checks if the student exists (done in dbManager.allocate_credits)
     def allocate_credits(self, instance):
         try:
             amount = int(self.amount_text_input.text)            
