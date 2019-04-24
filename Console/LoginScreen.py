@@ -59,7 +59,7 @@ class LoginScreen(Screen):
         if success:     #if login is authenticated successfully, transition to the professor's slots
             self.parent.transition = SlideTransition(direction="left")
             self.parent.current = "TIMETABLE_SCREEN"                
-        else:           #in case e
+        else:           #if login fails
             print('login failed')
 
 

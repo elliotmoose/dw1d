@@ -15,6 +15,7 @@ from ColorGridLayout import ColorGridLayout
 from kivy.graphics import Color
 from kivy.uix.screenmanager import SlideTransition
 
+#Colours for the slots
 BLACK = (0.1, 0.1, 0.1, 1)
 YELLOW = (255/255,242/255,127/255,1)
 BLUE = (114/255, 182/255, 216/255, 1)
@@ -23,32 +24,27 @@ GREEN = (142/255, 229/255, 179/255, 1)
 class TimetableScreen(Screen):
 
     def __init__(self, **kwargs):
-        self.offset = 0 
-        self.btn = [[None for _ in range(21)] for _ in range(21)]
+        self.offset = 0     #offset is to generate the next/previous week's weekly schedules
+        self.btn = [[None for _ in range(21)] for _ in range(21)]       #initialize empty variables to be used by button slots
         Screen.__init__(self, **kwargs)
-        self.Main = GridLayout(rows = 3)
+        self.Main = GridLayout(rows = 3)    
         self.add_widget(self.Main)
         self.Dayslayout = self.create_days(self.offset)
-        # self.Buttonlayout = self.create_buttons(self.offset)
-        self.Buttonlayout = GridLayout()
-        self.root = ScrollView()
-        #self.confirmButton = Button(text = 'Confirm Availability', size_hint_y=None, height=80, on_press = lambda x:self.confirmSlots())
-        self.root.add_widget(self.Buttonlayout)
+        self.Buttonlayout = GridLayout()        #initialize the base gridlayout for the timetable screen
+        self.root = ScrollView()                #to implement scroll view for the slots
+        self.root.add_widget(self.Buttonlayout) #adding subsequent widgets to the scroll and grid layouts
         self.Main.add_widget(self.Dayslayout)
         self.Main.add_widget(self.root)
-        #self.Main.add_widget(self.confirmButton)
-        self.confirmedslots = []
 
-    def on_enter(self):
+    def on_enter(self): 
         self.update()
 
-    def add_offset(self):
+    def add_offset(self): #to add offset when user navigates to the next week
         self.offset += 1
-        print(self.offset)
         self.update()
         
 
-    def update(self):
+    def update(self):   #to rebuild the screen widgets
         self.Main.clear_widgets()
         self.Buttonlayout.clear_widgets()
         self.Buttonlayout = self.create_buttons(self.offset)
@@ -58,18 +54,14 @@ class TimetableScreen(Screen):
         self.Dayslayout = self.create_days(self.offset)
         self.Main.add_widget(self.Dayslayout)
         self.Main.add_widget(self.root)
-        # self.Main.add_widget(self.confirmButton)
 
-    def dec_offset(self):
+    def dec_offset(self): #to decrease offset when user navigates to previous week
         self.offset -= 1
-        print(self.offset)
         self.update()
 
-    #checks if the slot at index, i,j has been created in the database
-    def is_in_db(self, i, j):    
-
+                                
+    def is_in_db(self, i, j):   #checks if the slot at index, i,j exists in the database    
         my_prof_slots = self.parent.dbManager.my_prof_slots
-
         slot_to_check = self.dictionary[j][i]
 
         for slot in my_prof_slots:
@@ -78,50 +70,44 @@ class TimetableScreen(Screen):
 
         return False
 
-    def is_booked(self, i, j):
+    def is_booked(self, i, j):  #checks if a student has booked the available slot
         try:
             return self.dictionary[j][i]['student_id'] != 'null'
         except:
             return False
 
-
-
-    def create_buttons(self, off):
+    def create_buttons(self, off): #to create the slot buttons which are representative of the dictionary of slots
         self.dictionary = GetWeek.getSlots(GetWeek.getWeek(off), self.parent.dbManager.my_prof['id'])
-
         for i in range(21):
             for j in range(5):
                 for db_slot in self.parent.dbManager.my_prof_slots:
                     local_slot = self.dictionary[j][i]
-                    
                     if local_slot['date'] == db_slot['date'] and local_slot['time'] == db_slot['time']:  
                         self.dictionary[j][i] = db_slot
-
-
+        
         ButtonLayout = GridLayout(cols=5, spacing=2, size_hint_y=None, height=21*80+22*2)
-
-        # slotlist = []
-        # for item in list(db.child('slots').get().val()):
-        #     slotlist.append(db.child('slots').get().val()[item]['date']+db.child('slots').get().val()[item]['time'])
-
+        
         for i in range(21):
             for j in range(5):
                 if self.is_in_db(i,j):
                     if self.is_booked(i,j):
-                        colorvar = GREEN
+                        colorvar = GREEN    #sets the slot colour to green if a student has booked it
                     else:
-                        colorvar = YELLOW
+                        colorvar = YELLOW   #sets the slot colour to yellow if the professor has declared his availability but is unbooked by students
                 else:
-                    colorvar = BLUE
+                    colorvar = BLUE         #sets default colour to blue to represent lack of availability
                 self.btn[j][i] = Button(text=str(self.dictionary[j][i]['time'])+'\n'+str(self.dictionary[j][i]['date']), 
                     size_hint_y=None, 
-                    height=80, font_size = 18, halign='center', color = BLACK, background_color = colorvar,
-                    on_release = partial(self.select_slot, i, j), background_normal = '')
+                    height=80, font_size = 18, 
+                    halign='center', color = BLACK, 
+                    background_color = colorvar,
+                    on_release = partial(self.select_slot, i, j), 
+                    background_normal = '')
                 ButtonLayout.add_widget(self.btn[j][i])
         
         return ButtonLayout
     
-    def create_days(self, off): 
+    def create_days(self, off): #to create day labels to signify the days of the week
         DaysLayout = ColorGridLayout(cols = 5, spacing = 2, size_hint_y=None, width=160, color = Color(0.2,0.2,0.2,1)) 
         mon = Label(text = 'Monday', font_size = 24)
         tue = Label(text = 'Tuesday', font_size = 24)
@@ -134,10 +120,7 @@ class TimetableScreen(Screen):
         refresh = Button(text = "Refresh", on_press = lambda x:self.refresh())
         logout = Button(text = 'Logout', on_press = lambda x:self.logout())
         legend = Button(text = 'Legend', on_press = lambda x:self.legend())
-        
-        #insert buttons
         DaysLayout.add_widget(legend)
-        #only the 2nd offset onwards have prevweek
         DaysLayout.add_widget(prevweek)     
         DaysLayout.add_widget(refresh)
         DaysLayout.add_widget(nextweek)
@@ -146,14 +129,11 @@ class TimetableScreen(Screen):
             DaysLayout.add_widget(day)
         return DaysLayout
 
-    def select_slot(self, i, j, x):        
-        #has to check if it is booked first, otherwise is_in_db will clear first
-        if self.is_booked(i, j):
-            print('popup triggered')
-            current = self.dictionary[j][i] #checks db for booked slots
+    def select_slot(self, i, j, x): #if any slot is clicked, this function is called
+        if self.is_booked(i, j):    #if the slot is booked by a student
+            current = self.dictionary[j][i] 
             student_id = current['student_id']
             student_details = self.parent.dbManager.full_db['students'][student_id]
-
             popup = Popup(title = 'Booking Details',
                           content = Label(text = 'Time: {}\nDate: {}\nStudent ID: {}\nName: {}\nEmail: {}\nClass: {}'.format(current['time'], 
                               current['date'], 
@@ -164,20 +144,17 @@ class TimetableScreen(Screen):
                           size_hint = (None, None),
                           size = (350, 250))
             popup.open()
-            #show modal with student info
+            #pop up containing the student details who booked the selected slot         
         
-        elif self.is_in_db(i, j):
-            print('removing slots')
+        elif self.is_in_db(i, j):#if a previously declared available slot is clicked, it undoes the confirmation and removes that slot from the database
             self.parent.dbManager.removeDBSlots(self.dictionary[j][i])
                 
-        else:
-            print('reached here')
+        else:       #if an empty slot is clicked, it is pushed to database with an UUID as the key for the slot
             self.dictionary[j][i]['id'] = str(uuid.uuid4())
             self.parent.dbManager.updateDBSlots(self.dictionary[j][i])
-            
         self.update()
     
-    def legend(self):
+    def legend(self):   #func to display a legend to display the differently coloured slots
         LegendLayout = GridLayout(rows = 2)
         picture = Button(background_normal = 'legend.jpg')
         closepopup = Button(text = 'Close', size_hint_y = (None),
@@ -190,13 +167,13 @@ class TimetableScreen(Screen):
         closepopup.bind(on_press=popup.dismiss)
         popup.open()
     
-    def refresh(self):
+    def refresh(self):  #to refresh the slots to check for updates in the slot bookings
         print('reached refresh')
         self.parent.dbManager.reloadSlots()
         self.update()
         
 
-    def logout(self):
+    def logout(self):   #to allow the professor to log out and transit back to login screen
         self.parent.transition = SlideTransition(direction="right")
         self.parent.current = "LOGIN_SCREEN" 
 

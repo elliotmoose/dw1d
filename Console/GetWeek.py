@@ -11,8 +11,12 @@ def getWeek(offset):
     if offset == 0:
         idx1 = -1
         idx2 = 1
+    
+    elif offset < 0:
+        idx1 = offset - 1
+        idx2 = offset
         
-    else:
+    elif offset > 0:
         idx1 = offset
         idx2 = offset + 1
         
@@ -23,6 +27,7 @@ def getWeek(offset):
         output[i] = str(output[i])
     
     return output
+
 
 #functions to generate date of each day in the correct format (eg. 27/04/19)
 def mon(a):
@@ -78,7 +83,7 @@ def getSlots(weeklist, profid):
         
     return slotsls
 
-
+print(getWeek(1))
             
             
         
