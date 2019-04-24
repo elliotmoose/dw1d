@@ -17,15 +17,15 @@ class LoginScreen(Screen):
         container = ColorBoxLayout(orientation='vertical', color=Color(1,1,1,1))
         image = Image(source='logo.png')
         
-        icbs_label = Label(text="Integrated Consultation Booking System", color=(0,0,0,1),size_hint_y=None, height=120, font_size=40)                
+        console_label = Label(text="Professor Console", color=(0,0,0,1),size_hint_y=None, height=150, font_size=70)                
+        icbs_label = Label(text="Integrated Consultation Booking System", color=(0,0,0,1),size_hint_y=None, height=60, font_size=40)                
 
         container.add_widget(Widget())
         container.add_widget(image)
+        container.add_widget(console_label)                
         container.add_widget(icbs_label)        
-
-        container.add_widget(Widget())
         
-        textFieldContainer = BoxLayout(orientation='horizontal')
+        textFieldContainer = BoxLayout(orientation='horizontal', size_hint_y=None, height=200)
         boxLayout = BoxLayout(orientation='vertical', size_hint=(None,None), width=400, height=130)            
         
         usernameInput = TextInput(write_tab=False, size_hint_y=None, height=40)
@@ -48,11 +48,10 @@ class LoginScreen(Screen):
         container.add_widget(textFieldContainer)
         container.add_widget(Widget())
 
-        self.add_widget(container)
-
-        #test
+        self.add_widget(container)      
+                     
         usernameInput.text = 'meixuan'
-        passwordInput.text = '12345'            
+        passwordInput.text = '12345'           
 
     def login(self):
         username = self.usernameInput.text

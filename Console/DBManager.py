@@ -96,5 +96,24 @@ class DBManager:
             #print(full_db["slots"])
                 self.my_prof_slots.append(s)
 
+
+    #returns tuple: (success, message)
+    def allocate_credits(self, student_id, amount):
+        students = self.db.child('students').get().val()
+
+        for student in students.values():
+            if student['id'] == student_id:
+                self.db.child('students').child(student['id']).update({
+                    'credits': student['credits'] + amount
+                })
+
+                return True, ''
+
+        return False, 'Could not find a\nstudent with ID:\n{}'.format(student_id)
+
+
+
+        
+
     
 

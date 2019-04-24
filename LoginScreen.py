@@ -16,13 +16,14 @@ class LoginScreen(Screen):
 
         container = ColorBoxLayout(orientation='vertical', color=Color(1,1,1,1))
         image = Image(source='logo.png')
-        
-        tap_card_label = Label(text="Tap card to login", color=(0,0,0,1),size_hint_y=None, height=130)                
-        icbs_label = Label(text="Integrated Consultation Booking System", color=(0,0,0,1),size_hint_y=None, height=200, font_size=70)                
-        # self.add_widget(label)       
+                
+        tap_card_label = Label(text="Tap card to login", color=(73/255,201/255,56/255,1),size_hint_y=None, height=130)                
+        booking_station_label = Label(text="Booking Station", color=(0,0,0,1),size_hint_y=None, height=150, font_size=70)                
+        icbs_label = Label(text="Integrated Consultation Booking System", color=(0,0,0,1),size_hint_y=None, height=60, font_size=40)                
 
         container.add_widget(Widget())
         container.add_widget(image)
+        container.add_widget(booking_station_label)                
         container.add_widget(icbs_label)        
         container.add_widget(tap_card_label)
         container.add_widget(Widget())

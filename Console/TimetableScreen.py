@@ -6,6 +6,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.button import ButtonBehavior
 import uuid
@@ -38,6 +39,7 @@ class TimetableScreen(Screen):
         self.Main.add_widget(self.root)
         #self.Main.add_widget(self.confirmButton)
         self.confirmedslots = []
+        self.popup = None
 
     def on_enter(self):
         self.update()
@@ -130,16 +132,16 @@ class TimetableScreen(Screen):
         nextweek = Button(text = 'Next Week', on_press = lambda x:self.add_offset())
         prevweek = Button(text = 'Previous Week', on_press = lambda x:self.dec_offset())
         refresh = Button(text = "Refresh", on_press = lambda x:self.refresh())
-        logout = Button(text = 'Logout', on_press = lambda x:self.logout())
+        menu = Button(text = 'Menu', on_press = lambda x:self.show_menu())
         legend = Button(text = 'Legend', on_press = lambda x:self.legend())
         
         #insert buttons
-        DaysLayout.add_widget(legend)
-        #only the 2nd offset onwards have prevweek
+        DaysLayout.add_widget(legend)        
         DaysLayout.add_widget(prevweek)     
         DaysLayout.add_widget(refresh)
-        DaysLayout.add_widget(nextweek)
-        DaysLayout.add_widget(logout)
+        DaysLayout.add_widget(nextweek)        
+        DaysLayout.add_widget(menu)
+
         for day in days:
             DaysLayout.add_widget(day)
         return DaysLayout
@@ -160,7 +162,7 @@ class TimetableScreen(Screen):
                               student_details['email'], 
                               student_details['class']), font_size = 20),
                           size_hint = (None, None),
-                          size = (350, 250))
+                          size = (350, 300))
             popup.open()
             #show modal with student info
         
@@ -194,11 +196,67 @@ class TimetableScreen(Screen):
         self.update()
         
 
-    def logout(self):
+    def logout(self, instance):
+        if self.popup != None:
+            self.popup.dismiss()
         self.parent.transition = SlideTransition(direction="right")
         self.parent.current = "LOGIN_SCREEN" 
 
+    def show_menu(self):
+        menu_layout = BoxLayout(orientation='vertical')
+
+        logout = Button(text='Logout', on_press=self.logout)        
+        allocate = Button(text='Allocate Credits', on_press=self.show_allocate_credits)        
+        menu_layout.add_widget(allocate)
+        menu_layout.add_widget(logout)
+
+        self.popup = Popup(title='Menu',content=menu_layout, size_hint=(None,None), height=250, width=300)
+        self.popup.open()
  
+    def show_allocate_credits(self, instance):
+        self.popup.dismiss() #dismiss menu
+
+        allocate_layout = BoxLayout(orientation='vertical')
+
+        self.student_id_text_input = TextInput(hint_text='Student ID', write_tab=False)        
+        self.amount_text_input = TextInput(hint_text='Credits Amount', write_tab=False)        
+        
+        allocate = Button(text='Confirm', on_press=self.allocate_credits)        
+        allocate_layout.add_widget(self.student_id_text_input)
+        allocate_layout.add_widget(self.amount_text_input)
+        allocate_layout.add_widget(allocate)
+
+        self.popup = Popup(title='Allocate Credits',content=allocate_layout, size_hint=(None,None), height=350, width=400)
+        self.popup.open()
+
+    def allocate_credits(self, instance):
+        try:
+            amount = int(self.amount_text_input.text)            
+        except:
+            self.show_message('Error', 'Please enter\n a valid amount\n(integers only)')            
+            return
+
+        student_id = self.student_id_text_input.text
+
+        success, message = self.parent.dbManager.allocate_credits(student_id, amount)                
+
+        if success == True:
+            self.show_message('Success', '{} credits have\nbeen allocated to \n{}!'.format(amount, student_id))
+        else:
+            self.show_message('Error', message)
+
+    def show_message(self,title, message):
+        
+        #dismiss popup if there is one
+        if self.popup != None:
+            self.popup.dismiss()
+
+        self.popup = Popup(title=title,content=Label(text=message), size_hint=(None,None), height=400, width=400)
+        self.popup.open()
+
+        
+
+        
 
 
 
