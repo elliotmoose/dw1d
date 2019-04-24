@@ -228,7 +228,7 @@ class SlotsWidget(ColorBoxLayout):
     def sort_filter_slots(self, input_slots):
         output = []
         slots = copy.copy(input_slots)
-        slots.sort(key=lambda x: x['date'])
+        slots.sort(key=lambda x: x['date']+x['time'])
         
         for slot in slots:
             if slot['student_id'] != 'null':

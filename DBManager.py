@@ -176,6 +176,12 @@ class DBManager:
     def get_student(self):
         return self.structure_data['current']
 
+    def get_prof_with_id(self, id):        
+        for prof in self.full_data['professors']:
+            if prof['id'] == id:
+                return prof
+
+
         
                 
                 

@@ -50,28 +50,51 @@ class DBManager:
         
         firebase = pyrebase.initialize_app(config)
         self.db = firebase.database() 
+
+        self.full_data = {}
+
+        self.my_prof_slots=[]
+
    
         
     def login(self, username, password):
-        full_db = self.db.child('/').get().val()
+        self.full_db = self.db.child('/').get().val()
         
         #username="John"#change accordingly
         #password="password"#change accordingly
         
-        self.my_prof_slots=[]
         #allslots = full_db['slots']
-        for p in full_db['professors']:
+        self.my_prof_slots=[]
+
+        for p in self.full_db['professors']:
         
             if p['username']==username and p["password"]==password:
                 self.my_prof = p
-                for s in full_db["slots"].values():
+                for s in self.full_db["slots"].values():
                     if p['id']==s["prof_id"]:
                     #print(full_db["slots"])
                         self.my_prof_slots.append(s)
                 return True
         return False
 
-    def updateDbSlots(self, data):
+    def updateDBSlots(self, data):
         print(data)
-        #self.db.child('slots').update(data)
+        self.db.child('slots').update({data['id']: data})
+        self.my_prof_slots.append(data)
+
+
+    def removeDBSlots(self, data):
+        self.db.child("slots").child(data['id']).remove()
+        self.my_prof_slots.remove(data)
+
+
+    def reloadSlots(self):
+        self.full_db = self.db.child('/').get().val()
+        self.my_prof_slots=[]
+        for s in self.full_db["slots"].values():
+            if self.my_prof['id']==s["prof_id"]:
+            #print(full_db["slots"])
+                self.my_prof_slots.append(s)
+
+    
 

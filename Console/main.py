@@ -28,7 +28,9 @@ class Main(ScreenManager):
 
         timetableScreen = TimetableScreen(name="TIMETABLE_SCREEN")        
         self.timetableScreen = timetableScreen
-        self.add_widget(timetableScreen)                          
+        self.add_widget(timetableScreen)        
+
+        
 
 class ConsoleApp(App):
     def build(self):                    

@@ -31,8 +31,8 @@ class LoginScreen(Screen):
         self.add_widget(container)
 
         #test
-        usernameInput.text = 'meixuan'
-        passwordInput.text = '12345'            
+        #usernameInput.text = 'meixuan'
+        #passwordInput.text = '12345'            
 
     def login(self):
         username = self.usernameInput.text
