@@ -11,6 +11,10 @@ from kivy.uix.button import Label, Button
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition, SlideTransition
 
 from LoginScreen import LoginScreen
+
+# from kivy.core.window import Window
+# Window.size = (1920,1080)
+
 # from SubjectsScreen import SubjectsScreen
 # from ProfessorsScreen import ProfessorsScreen
 from DBManager import DBManager

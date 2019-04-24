@@ -113,7 +113,7 @@ class TimetableScreen(Screen):
                     colorvar = BLUE
                 self.btn[j][i] = Button(text=str(self.dictionary[j][i]['time'])+'\n'+str(self.dictionary[j][i]['date']), 
                     size_hint_y=None, 
-                    height=80,text_size=(350,None),font_size='20sp', color = BLACK, background_color = colorvar,
+                    height=80, font_size = 18, halign='center', color = BLACK, background_color = colorvar,
                     on_release = partial(self.select_slot, i, j), background_normal = '')
                 ButtonLayout.add_widget(self.btn[j][i])
         
@@ -136,11 +136,7 @@ class TimetableScreen(Screen):
         #insert buttons
         DaysLayout.add_widget(legend)
         #only the 2nd offset onwards have prevweek
-        if off != 0:
-            DaysLayout.add_widget(prevweek)
-        else:
-            DaysLayout.add_widget(Label(text = ''))
-        
+        DaysLayout.add_widget(prevweek)     
         DaysLayout.add_widget(refresh)
         DaysLayout.add_widget(nextweek)
         DaysLayout.add_widget(logout)
