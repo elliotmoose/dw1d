@@ -362,8 +362,7 @@ class SlotsWidget(ColorBoxLayout):
         self.confirmationmodalview = confirmationmodalview
         self.confirmationmodalview.open()
 
-    def on_failed_booking(self):
-        
+    def on_failed_booking(self):        
         confirmationmodalview = ModalView(size_hint=(None,None), width=600, height=400)
         # view = ModalView(auto_dismiss=False)
         container = ColorBoxLayout(orientation='vertical', color=Color(1,1,1,1))
@@ -395,6 +394,10 @@ class SlotsWidget(ColorBoxLayout):
         self.modalview.dismiss()
 
     def close_confirmation_modal(self):
+        try:
+            self.close_modal()        
+        finally:
+            pass
         self.confirmationmodalview.dismiss()
 
     
