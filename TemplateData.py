@@ -40,18 +40,19 @@ def module(name, id):
 
 def newuuid():
     return str(uuid.uuid4())
-slot1 = slot('0800', '24/04/19', 0)
-slot12 = slot('1000', '24/04/19', 0)
-slot13 = slot('1100', '24/04/19', 0)
-slot14 = slot('1130', '24/04/19', 0)
-slot2 = slot('0800', '25/04/19', 0)
-slot21 = slot('1000', '24/04/19', 0)
-slot3 = slot('1200', '26/04/19', 1)
-slot4 = slot('1400', '27/04/19', 1)
+slot1 = slot('0800', '24/04/19', 2)
+slot12 = slot('1000', '24/04/19', 3)
+slot13 = slot('1100', '24/04/19', 3)
+slot14 = slot('1130', '24/04/19', 3)
+slot2 = slot('0800', '25/04/19', 3)
+slot21 = slot('1000', '25/04/19', 2)
+slot3 = slot('1200', '25/04/19', 2)
+slot4 = slot('1400', '25/04/19', 3)
 
 meixuan = prof('Mei Xuan', 0, '91111000', 'meixuan@sutd.edu.sg',['10.008', '10.011'], 'meixuan','12345')
 chunkiat = prof('Chun Kiat',1, '91111999', 'chunkiat@sutd.edu.sg',['10.007'], 'chunkiat','12345')
 okakurniawan = prof('Oka Kurniawan',2, '90000999', 'okakurniawan@sutd.edu.sg',['10.009'], 'okakurniawan','12345')
+natalieagus = prof('Natalie Agus',3, '90000999', 'natalie_agus@@sutd.edu.sg',['10.009'], 'natalieagus','12345')
 
 elliot = student('Elliot Koh', '1003501', 'F04', '974498831285', '91000092', 'elliot@sutd.edu.sg',['10.007', '10.009', '10.008', '10.011'])
 sid = student('Sidharth', '1002345', 'F04', '372390003533', '91123123', 'sidharth@sutd.edu.sg',['10.007', '10.008', '10.011'])
@@ -65,7 +66,7 @@ digitalworld = module('Digital World', '10.009')
 
 dbtemplate = {}
 dbtemplate['current'] = []        
-dbtemplate['professors'] = [meixuan, chunkiat, okakurniawan]
+dbtemplate['professors'] = [meixuan, chunkiat, okakurniawan, natalieagus]
 dbtemplate['students'] = {
     elliot['id']: elliot, 
     sid['id'] : sid
