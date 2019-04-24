@@ -44,6 +44,7 @@ class TimetableScreen(Screen):
 
     def add_offset(self):
         self.offset += 1
+        print(self.offset)
         self.update()
         
 
@@ -61,6 +62,7 @@ class TimetableScreen(Screen):
 
     def dec_offset(self):
         self.offset -= 1
+        print(self.offset)
         self.update()
 
     #checks if the slot at index, i,j has been created in the database
@@ -85,7 +87,7 @@ class TimetableScreen(Screen):
 
 
     def create_buttons(self, off):
-        self.dictionary = GetWeek.getButtons(GetWeek.getWeek(off), self.parent.dbManager.my_prof['id'])
+        self.dictionary = GetWeek.getSlots(GetWeek.getWeek(off), self.parent.dbManager.my_prof['id'])
 
         for i in range(21):
             for j in range(5):

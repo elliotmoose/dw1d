@@ -1,40 +1,20 @@
 """
 The purpose of DB manager is to handle all interactions with the database
-
 i.e. 
 1. Receiving Logins
 2. Loading data for a login 
     a. subjects for student
     b. professors for that subject
     c. slots for that professor
-
 """
-# import time
-
-# class DBManager:        
-#     def __init__(self):
-#         self.loggedIn = False
-#         self.data = {}
-        
-#     def login(self, username, password):
-#         if username=='elliot' and password=='12345':
-#             return True, {'data': 'test data'}
-#         else:
-#             return False, None
-
-#     def logout(self):
-#         self.loggedIn = False
-#         self.data = {}    
-#         # self.beginCheckLoginCycle()  
            
 import time
 from threading import Timer
 from libdw import pyrebase
-#import TemplateData
 import copy
 
 FIREBASE_ENDPOINT = 'https://basic-dc724.firebaseio.com/'
-REFRESH_RATE = 60 #firebase calls are still a bottleneck
+REFRESH_RATE = 60
 
 config = {
   "apiKey": "AIzaSyByqBZnJMeBo9CjNn111hRYWo34ipRIOwM",
@@ -48,47 +28,33 @@ class DBManager:
         self.loggedIn = False
         self.data = {}
         
-        firebase = pyrebase.initialize_app(config)
+        firebase = pyrebase.initialize_app(config) #initialize firebase storage
         self.db = firebase.database() 
+        self.my_prof_slots=[] #list of slots for currently logged in professor
 
-        self.full_data = {}
-
-        self.my_prof_slots=[]
-
-   
-        
     def login(self, username, password):
         self.full_db = self.db.child('/').get().val()
         
-        #username="John"#change accordingly
-        #password="password"#change accordingly
-        
-        #allslots = full_db['slots']
-        self.my_prof_slots=[]
-
-        for p in self.full_db['professors']:
-        
-            if p['username']==username and p["password"]==password:
-                self.my_prof = p
-                for s in self.full_db["slots"].values():
-                    if p['id']==s["prof_id"]:
-                    #print(full_db["slots"])
-                        self.my_prof_slots.append(s)
+        for prof in self.full_db['professors']:
+            if prof['username']==username and prof["password"]==password:   #authentication check for username and password of professor
+                self.my_prof = prof
+                for slot in self.full_db["slots"].values():
+                    if prof['id']==slot["prof_id"]:     #check if the professor's id and the slot-associated professor id are the same
+                        self.my_prof_slots.append(slot)                     
                 return True
         return False
 
-    def updateDBSlots(self, data):
-        print(data)
+    def updateDBSlots(self, data):  #to push slot information to the database
         self.db.child('slots').update({data['id']: data})
         self.my_prof_slots.append(data)
 
 
-    def removeDBSlots(self, data):
+    def removeDBSlots(self, data):  #to delete slot information from the database
         self.db.child("slots").child(data['id']).remove()
         self.my_prof_slots.remove(data)
 
 
-    def reloadSlots(self):
+    def reloadSlots(self):  #to refresh slot information from the database
         self.full_db = self.db.child('/').get().val()
         self.my_prof_slots=[]
         for s in self.full_db["slots"].values():

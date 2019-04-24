@@ -7,10 +7,9 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import SlideTransition
 from kivy.graphics import Color
-
 from ColorBoxLayout import ColorBoxLayout
 
-class LoginScreen(Screen):
+class LoginScreen(Screen): 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -20,6 +19,7 @@ class LoginScreen(Screen):
         icbs_label = Label(text="Integrated Consultation Booking System", color=(0,0,0,1),size_hint_y=None, height=120, font_size=40)                
 
         container.add_widget(Widget())
+
         container.add_widget(image)
         container.add_widget(icbs_label)        
 
@@ -28,6 +28,7 @@ class LoginScreen(Screen):
         textFieldContainer = BoxLayout(orientation='horizontal')
         boxLayout = BoxLayout(orientation='vertical', size_hint=(None,None), width=400, height=130)            
         
+        #username and password text input field 
         usernameInput = TextInput(write_tab=False, size_hint_y=None, height=40)
         self.usernameInput = usernameInput
         usernameInput.hint_text = 'Username'
@@ -49,21 +50,16 @@ class LoginScreen(Screen):
         container.add_widget(Widget())
 
         self.add_widget(container)
-
-        #test
-        usernameInput.text = 'meixuan'
-        passwordInput.text = '12345'            
-
-    def login(self):
+            
+    def login(self):    #function to receive username password and authenticate
         username = self.usernameInput.text
         password = self.passwordInput.text        
         success = self.parent.dbManager.login(username, password)        
 
-        if success:
-            #self.parent.timetableScreen.set_data(data)        
+        if success:     #if login is authenticated successfully, transition to the professor's slots
             self.parent.transition = SlideTransition(direction="left")
             self.parent.current = "TIMETABLE_SCREEN"                
-        else:
+        else:           #in case e
             print('login failed')
 
 

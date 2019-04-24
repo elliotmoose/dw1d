@@ -11,6 +11,7 @@ def getWeek(offset):
     if offset == 0:
         idx1 = -1
         idx2 = 1
+        
     else:
         idx1 = offset
         idx2 = offset + 1
