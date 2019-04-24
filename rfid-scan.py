@@ -82,6 +82,7 @@ while True:
         if student['can_number'] == uidstr:  
             db.child('/').update({'current':student})
             print('Found and logged in student: {0}'.format(student['name']))
+            
 
     # Found a card, now try to read block 4 to detect the block type
     #print('Card UID 0x{0}'.format(binascii.hexlify(uid)))

@@ -1,14 +1,25 @@
 """
-The purpose of DB manager is to handle all interactions with the database
 
-i.e. 
-1. Receiving Logins
-2. Loading data for a login 
-    a. subjects for student
-    b. professors for that subject
-    c. slots for that professor
+    DBMANAGER HANDLES ALL INTERACTION WITH DATABASE
 
-""" 
+    - Connection
+    - Receiving Login
+    - Loading of data (e.g. Loading available slots)
+    - Updating of data (e.g. Confirming of slots)
+    - Structuring of data
+
+    FOR TESTING PURPOSES:
+    
+    Running the following command simulates a login:
+    
+    $ python3 DBManager.py login
+
+    Running the following command will prompt user to re-populate database:
+
+    $ python3 DBManager.py
+
+"""
+
 import time
 from threading import Timer
 import pyrebase

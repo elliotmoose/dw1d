@@ -11,12 +11,10 @@ from DateHelper import DateTimeStringToEpoch, DateStringToDay, TodayEpoch
 
 import copy
 
-
 class MySlotsWidget(ColorBoxLayout):
     def __init__(self, back_callback, **kwargs):
         super().__init__(**kwargs)
-        
-        # self.add_widget(NavigationBar('My Slots','', back_callback))        
+                
         self.container = ColorBoxLayout(orientation='vertical')
 
         #Bottom Navigation Bar
@@ -35,19 +33,18 @@ class MySlotsWidget(ColorBoxLayout):
         #Slots Display
         self.scrollview = ScrollView()
         self.slots_container = ColorBoxLayout(orientation='vertical')
-
-
-
         self.scrollview.add_widget(self.slots_container)                
         
+        #Outermost layout        
         self.container.add_widget(self.scrollview)
         self.container.add_widget(Widget())
         self.container.add_widget(self.bottomNavigationBar)
 
+        #Overall Container
         self.add_widget(self.container)
 
-    def set_slots(self, input_slots):        
-        
+    #This function is called everytime the user presses "My Slots" Button
+    def set_slots(self, input_slots):                
         slots = copy.copy(input_slots)
         slots.sort(key=lambda x: DateTimeStringToEpoch(x['date']+' '+x['time']))
         
@@ -57,11 +54,12 @@ class MySlotsWidget(ColorBoxLayout):
             slot_bg_color = Color(1,1,1,1)
             slot_text_color = (0.1,0.1,0.1,1)
 
-            #check if slot is old
+            #check if slot is old -> change color accordingly
             if DateTimeStringToEpoch(slot['date']+' '+slot['time']) < TodayEpoch():
                 slot_bg_color = Color(0.75,0.75,0.75,1)
                 slot_text_color = (0.5,0.5,0.5,1)
 
+            #Container for slot labels
             slot_item = ColorBoxLayout(orientation='horizontal', size_hint_y=None, height=60, color=slot_bg_color)
 
             timeLabel = Label(text=slot['time'],color=slot_text_color, size_hint_x=None, width = 180)

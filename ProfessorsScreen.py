@@ -91,46 +91,51 @@ class ProfessorsScreen(Screen):
         self.studentDetailsWidget = StudentDetailsWidget(size_hint_y=None, height=studentDetailsHeight)
         boxLayout.add_widget(self.studentDetailsWidget)         
 
+    #This is to retrieve the data from dbManager
     def get_subject_data(self):                        
         if self.selectedSubjectID != None:
             subject = self.parent.dbManager.structured_data['modules'][self.selectedSubjectID]
             return subject
 
+    #This is to update the navigation bar subtitle
     def select_subject(self, subjectID):
         self.selectedSubjectID = subjectID                
         self.update()
 
+    #This retrieves the details of the current student logged in
     def get_student_data(self):
         if self.parent:
             return self.parent.dbManager.structured_data['current']
 
+    #This updates the user interface at the bottom of the screen, showing student data
     def set_student_data(self, student_data):
         self.student_data = student_data
         self.studentDetailsWidget.set_student_data(student_data)     
         self.slotsView.student_data = student_data   
 
-    #this should be run after confirming a booking in order to update all information displayed
+    #This should be run after confirming a booking in order to update all information displayed
     def reloadData(self):
         newStructuredData = self.parent.dbManager.reloadStructuredData()                
         print(newStructuredData["current"]["credits"])
         self.update()
 
+    #Update user interface when navigating to this screen
     def on_pre_enter(self, *args):                
         self.update()
 
+    #Reset when leaving screen
     def on_leave(self, *args):
         #reset all views
         self.selectedSubjectID = None
         self.selectedProfIndex = None
         self.update()
         self.slotsView.set_slots([]) 
-        self.profDetailsView.reset_prof_data()     
-    
-    # def on_size(self, *args):
-    #     self.bodyContainer.height = self.height-navigationBarHeight-studentDetailsHeight
-    #     self.slotsView.height = self.height-navigationBarHeight-studentDetailsHeight        
+        self.profDetailsView.reset_prof_data()             
 
 
+    #This updates the userinterface:
+    # - Updates navigation subtitle
+    # - Updates Professors buttons and selection    
     def update(self):
         if self.selectedSubjectID != None:            
             subject = self.get_subject_data()
@@ -166,6 +171,7 @@ class ProfessorsScreen(Screen):
         self.parent.transition = SlideTransition(direction="right")
         self.parent.current = 'SUBJECTS_SCREEN'
 
+    #When a prof button is pressed
     def select_prof(self, index):  
         self.reset_button_colors()    
         
@@ -219,6 +225,7 @@ class SlotsWidget(ColorBoxLayout):
         self.add_widget(self.scrollView)
         self.student_data = {}
 
+    #Takes in a list of slots and seperates by date
     def categorize_slots(self, slots):
         output = {}                                
 
@@ -247,14 +254,17 @@ class SlotsWidget(ColorBoxLayout):
 
         return output
 
+    #This is called by professors screen whenever a prof is selected. Comes as a list
     def set_slots(self, slots):                        
 
         self.contentView.clear_widgets()
 
         filtered_slots = self.sort_filter_slots(slots) #filters out slots that are not booked yet        
-        self.slotsData = filtered_slots        
         cat_slots = self.categorize_slots(filtered_slots) #categorizes it by date into a dictionary
+        
+        self.slotsData = filtered_slots #keeps a reference to the slots it is currently displaying (So that it knows what to do on selection)         
                 
+        #Generate headers that seperate slots by dates. 
         for date in cat_slots.keys():
             slotlist = cat_slots[date]
 
@@ -393,6 +403,7 @@ class ProfDetailsWidget(ColorBoxLayout):
 
         self.reset_prof_data()
 
+    #When a prof is selected, this is called and the information displayed is updated
     def set_prof_data(self, prof_data):
         self.prof_data = prof_data
         self.update()        
