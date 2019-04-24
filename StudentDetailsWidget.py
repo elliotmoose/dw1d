@@ -74,7 +74,7 @@ class StudentDetailsWidget(ColorBoxLayout):
     def show_my_slots(self, instance):        
         
         #get all slots (even those that belong to me)
-        dbManager = self.parent.parent.dbManager
+        dbManager = self.parent.parent.parent.dbManager
         full_data = dbManager.full_data
         
         slots = full_data['slots']
@@ -93,7 +93,6 @@ class StudentDetailsWidget(ColorBoxLayout):
             
             if prof != None:
                 slot['prof_details'] = prof
-
 
         self.my_slots_widget.set_slots(my_slots)
         self.modalview.open()        

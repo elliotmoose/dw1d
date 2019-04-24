@@ -43,7 +43,7 @@ class SubjectsScreen(Screen):
         self.add_widget(boxLayout)    
         
         self.studentDetailsWidget = StudentDetailsWidget(size_hint_y=None, height=200)
-        self.add_widget(self.studentDetailsWidget) 
+        boxLayout.add_widget(self.studentDetailsWidget) 
 
     def set_data(self, data):        
         self.data = data
