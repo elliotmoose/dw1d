@@ -10,6 +10,7 @@ from kivy.uix.label import Label
 from kivy.uix.togglebutton import ToggleButton
 from libdw import pyrebase
 from kivy.uix.button import ButtonBehavior
+from kivy.uix.popup import Popup
 
 from functools import partial
 
@@ -102,8 +103,6 @@ class TimetableScreen(Screen):
 
 
 
-
-
     def create_buttons(self, off):
         self.dictionary = GetWeek.getButtons(GetWeek.getWeek(off))
         ButtonLayout = GridLayout(cols=5, spacing=2, size_hint_y=None, height=21*80+22*2)
@@ -162,13 +161,20 @@ class TimetableScreen(Screen):
                     #print(self.dictionary[j][i])
 
     def select_slot(self, i, j, x):
-        print('slot selected')
+#        print(self.dictionary[j][i])
         if self.is_in_db(i, j):
             #delete
             pass
         elif self.is_booked(i, j):
+            print('popup triggered')
+            current = self.dictionary[j][i]
+            popup = Popup(title = 'Booking Details',
+                          content = Label(text = 'Time: {}\nDate: {}\nStudent ID: {}'.format(current['time'], current['date'], current['student_id']), font_size = 20),
+                          size_hint = (None, None),
+                          size = (250, 250))
+            popup.open()
             #show modal with student info
-            pass
+            
         else:
             #add
             pass

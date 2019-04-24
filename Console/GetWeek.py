@@ -76,7 +76,7 @@ def getButtons(weeklist):
             slots['date'] = weeklist[i]
             #slots['id'] = slots['time'] + slots['date']
             slots['prof_id'] = 0
-            slots['student_id'] = 'Null'
+            slots['student_id'] = 'null'
             days.append(slots)
         output.append(days)
         
