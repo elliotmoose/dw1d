@@ -32,12 +32,11 @@ class MySlotsWidget(ColorBoxLayout):
 
         #Slots Display
         self.scrollview = ScrollView()
-        self.slots_container = ColorBoxLayout(orientation='vertical')
+        self.slots_container = ColorBoxLayout(orientation='vertical', size_hint_y=None)
         self.scrollview.add_widget(self.slots_container)                
         
         #Outermost layout        
-        self.container.add_widget(self.scrollview)
-        self.container.add_widget(Widget())
+        self.container.add_widget(self.scrollview)        
         self.container.add_widget(self.bottomNavigationBar)
 
         #Overall Container
@@ -45,9 +44,10 @@ class MySlotsWidget(ColorBoxLayout):
 
     #This function is called everytime the user presses "My Slots" Button
     def set_slots(self, input_slots):                
+        slot_height = 60
         slots = copy.copy(input_slots)
-        slots.sort(key=lambda x: DateTimeStringToEpoch(x['date']+' '+x['time']))
-        
+        slots.sort(key=lambda x: DateTimeStringToEpoch(x['date']+' '+x['time']))                
+
         self.slots_container.clear_widgets()
         
         for slot in slots:
@@ -60,7 +60,7 @@ class MySlotsWidget(ColorBoxLayout):
                 slot_text_color = (0.5,0.5,0.5,1)
 
             #Container for slot labels
-            slot_item = ColorBoxLayout(orientation='horizontal', size_hint_y=None, height=60, color=slot_bg_color)
+            slot_item = ColorBoxLayout(orientation='horizontal', size_hint_y=None, height=slot_height, color=slot_bg_color)
 
             timeLabel = Label(text=slot['time'],color=slot_text_color, size_hint_x=None, width = 180)
             dateLabel = Label(text='{} ({})'.format(slot['date'],DateStringToDay(slot['date'])),color=slot_text_color, size_hint_x=None, width = 300)
@@ -75,6 +75,8 @@ class MySlotsWidget(ColorBoxLayout):
             slot_item.add_widget(profEmailLabel)
 
             self.slots_container.add_widget(slot_item)
+
+        self.slots_container.height = slot_height * len(slots)
 
             
 
