@@ -9,6 +9,26 @@ Run the 'main.py' file inside the console folder.
 
 FOR STUDENT'S SIDE:
 Run the 'main.py' file outside the console folder.
+Then run 'ICBS_Station.py' (outside console) on the raspberry pi; and scan the nfc card to log in.
+
+FOR TESTING PURPOSES:
+To simulate the login without setting up the ICBS Station, run the following in the terminal:
+
+$ Python3 DBManager.py login
+
+Alternatively, run:
+
+$ Python3 main.py login 
+
+for the student side script (outside console folder)
+
+To reset the database, run
+
+$ Python3 DBManager.py
+
+and follow the prompts. The first 'y' confirms the reset, and the second 'y' simulates a login**.
+
+**note the student side client logs out the database on start up.
 
 
 

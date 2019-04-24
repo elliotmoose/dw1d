@@ -22,7 +22,7 @@
 
 import time
 from threading import Timer
-import pyrebase
+from libdw import pyrebase
 import TemplateData
 import copy
 
